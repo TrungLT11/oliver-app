@@ -1,5 +1,5 @@
 {
-  "avatar": "Vuetify MD",
+  "avatar": "Oliver USA",
   "buttons": "Buttons",
   "calendar": "Calendar",
   "charts": "Charts",
@@ -41,5 +41,8 @@
   "user": "User Profile",
   "vforms": "Validation Forms",
   "widgets": "Widgets",
-  "wizard": "Wizard"
+  "wizard": "Wizard",
+
+  "order-list": "Danh Sách Đơn Hàng",
+  "new-order": "Nhập Đơn Hàng"
 }

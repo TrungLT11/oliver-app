@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar absolute app fixed dense>
+  <v-app-bar flat floating absolute app dense>
     <v-app-bar-nav-icon @click="setDrawer(!drawer)" small></v-app-bar-nav-icon>
     <!-- <v-btn icon text small @click="setDrawer(!drawer)">
       <v-icon>

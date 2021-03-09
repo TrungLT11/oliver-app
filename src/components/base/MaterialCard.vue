@@ -8,7 +8,7 @@
       <v-avatar
         v-if="avatar"
         size="128"
-        class="mx-auto v-card--material__avatar elevation-6"
+        class="mx-auto v-card--material__avatar elevation-3"
         color="grey"
       >
         <v-img :src="avatar" />
@@ -17,13 +17,13 @@
       <v-sheet
         v-else
         :class="{
-          'pa-7': !$slots.image
+          'pa-2': !$slots.image
         }"
         :color="color"
         :max-height="icon ? 90 : undefined"
         :width="icon ? 'auto' : '100%'"
         elevation="6"
-        class="text-start v-card--material__heading mb-n6"
+        class="text-start v-card--material__heading mb-n6 elevation-3"
         dark
       >
         <slot

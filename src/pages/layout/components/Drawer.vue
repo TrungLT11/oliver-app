@@ -53,7 +53,7 @@
     </v-list>
 
     <template v-slot:append>
-      <Settings />
+      <dashboard-core-settings />
     </template>
   </v-navigation-drawer>
 </template>
@@ -61,12 +61,11 @@
 <script>
 // Utilities
 import { mapState } from "vuex";
-import Settings from "./Settings";
 
 export default {
   name: "DashboardCoreDrawer",
   components: {
-    Settings
+    DashboardCoreSettings: () => import("./Settings")
   },
   props: {
     expandOnHover: {
@@ -78,40 +77,40 @@ export default {
   data: () => ({
     items: [
       {
-        icon: "mdi-view-dashboard",
+        icon: "mdi-text-box-multiple",
         title: "order-list",
         to: "/"
       },
       {
-        icon: "mdi-account",
-        title: "user",
-        to: "/pages/user"
+        icon: "mdi-text-box-plus",
+        title: "new-order",
+        to: "/order/new"
       },
-      {
-        title: "rtables",
-        icon: "mdi-clipboard-outline",
-        to: "/tables/regular-tables"
-      },
-      {
-        title: "typography",
-        icon: "mdi-format-font",
-        to: "/components/typography"
-      },
-      {
-        title: "icons",
-        icon: "mdi-chart-bubble",
-        to: "/components/icons"
-      },
-      {
-        title: "google",
-        icon: "mdi-map-marker",
-        to: "/maps/google-maps"
-      },
-      {
-        title: "notifications",
-        icon: "mdi-bell",
-        to: "/components/notifications"
-      }
+      // {
+      //   title: "rtables",
+      //   icon: "mdi-clipboard-outline",
+      //   to: "/tables/regular-tables"
+      // },
+      // {
+      //   title: "typography",
+      //   icon: "mdi-format-font",
+      //   to: "/components/typography"
+      // },
+      // {
+      //   title: "icons",
+      //   icon: "mdi-chart-bubble",
+      //   to: "/components/icons"
+      // },
+      // {
+      //   title: "google",
+      //   icon: "mdi-map-marker",
+      //   to: "/maps/google-maps"
+      // },
+      // {
+      //   title: "notifications",
+      //   icon: "mdi-bell",
+      //   to: "/components/notifications"
+      // }
     ]
   }),
 
