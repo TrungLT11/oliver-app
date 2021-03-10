@@ -366,13 +366,11 @@ export default {
 
   methods: {
     compute() {
-      console.log(this.exchangeValue);
       const computedData = new computedOrder({
         ...this.draft,
         rate: this.exchangeValue,
         fullyTransfered: this.fullyTransfered
       });
-      console.log(computedData, computedData.totalin);
     },
     cancel() {
       this.setEditDialog(false);
