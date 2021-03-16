@@ -9,11 +9,11 @@
         >
           <v-text-field
             class="ma-3"
-            :value="usRate"
+            v-model="usRateInput"
             type="number"
             label="Edit"
             append-icon="mdi-check"
-            @click:append.prevent
+            @click:append.prevent="updateExchange(1, usRateInput)"
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
@@ -25,7 +25,7 @@
         >
           <v-text-field
             class="ma-3"
-            :value="ukRate"
+            v-model="ukRateInput"
             type="number"
             label="Edit"
             append-icon="mdi-check"
@@ -41,7 +41,7 @@
         >
           <v-text-field
             class="ma-3"
-            :value="spainRate"
+            v-model="spainRateInput"
             type="number"
             label="Edit"
             append-icon="mdi-check"
@@ -57,7 +57,7 @@
         >
           <v-text-field
             class="ma-3"
-            :value="krRate"
+            v-model="krRateInput"
             type="number"
             label="Edit"
             append-icon="mdi-check"
@@ -78,7 +78,11 @@ export default {
       usRate: 0,
       ukRate: 0,
       spainRate: 0,
-      krRate: 0
+      krRate: 0,
+      usRateInput: 0,
+      ukRateInput: 0,
+      spainRateInput: 0,
+      krRateInput: 0
     };
   },
   computed: {},
@@ -92,8 +96,16 @@ export default {
       this.ukRate = response[1].rate;
       this.spainRate = response[2].rate;
       this.krRate = response[3].rate;
+      this.usRateInput = response[0].rate;
+      this.ukRateInput = response[1].rate;
+      this.spainRateInput = response[2].rate;
+      this.krRateInput = response[3].rate;
     },
-    ...mapActions("exchange", ["fetchExchange"])
+    async updateExchange(id, rate) {
+      await this.updateExchangeRate({id, rate});
+      this.initialize();
+    },
+    ...mapActions("exchange", ["fetchExchange", "updateExchangeRate"])
   }
 };
 </script>

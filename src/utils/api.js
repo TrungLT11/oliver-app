@@ -13,6 +13,7 @@ export default {
 
   /** EXCHANGE API */
   fetchExchange: () => request.get("/apis/exchange"),
+  updateExchange: (payload) => request.put("/apis/exchange", payload),
 
   /** TRANSFER API */
   fetchTransfers: payload =>

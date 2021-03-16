@@ -1,6 +1,6 @@
 <template>
   <v-sheet elevation="2" rounded="b-lg t-xl">
-    <v-sheet class="pa-3" :color="transfer.cardColor" dark rounded="xl">
+    <v-sheet class="pa-3" elevation="2" :color="transfer.cardColor" dark rounded="xl">
       <v-row align="center">
         <v-btn icon>
           <v-icon>mdi-currency-usd</v-icon>
