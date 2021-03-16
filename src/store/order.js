@@ -13,7 +13,8 @@ export default {
     total: 0,
     fetching: false,
     editingOrder: newOrder(),
-    editDialog: false
+    editDialog: false,
+    multiSelected: []
   }),
 
   mutations: {},
@@ -49,12 +50,17 @@ export default {
       await api.deleteOrder({ id });
       dispatch("fetchOrders");
     },
-    async createOrder({ state, dispatch }, id) {
-      await api.createOrder({ id });
+    async createOrder({ state, dispatch }, order) {
+      await api.createOrder({ order });
+      alert("SUCCESS")
+    },
+    async updateOrder({ state, dispatch }, { id, order }) {
+      await api.updateOrder({ id, order });
       dispatch("fetchOrders");
     },
-    async updateOrder({ state, dispatch }, order) {
-      await api.updateOrder({ order });
+    async changeMultiStatus({ state, dispatch }, status) {
+      const selectedArray = state.multiSelected;
+      await api.updateStatus({ id: selectedArray, status });
       dispatch("fetchOrders");
     },
     changeRowsPerPage({ state, dispatch }, value) {
@@ -92,6 +98,9 @@ export default {
     },
     setEditDialog({ state }, value) {
       state.editDialog = value;
+    },
+    setMultiSelected({ state }, value) {
+      state.multiSelected = value;
     }
   },
   namespaced: true

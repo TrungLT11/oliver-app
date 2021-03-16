@@ -4,7 +4,7 @@ import Router from "vue-router";
 Vue.use(Router);
 
 export default new Router({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes: [
     {
@@ -27,6 +27,16 @@ export default new Router({
           name: "New Order",
           path: "order/new",
           component: () => import("@/pages/order-form/NewOrder")
+        },
+        {
+          name: "Transfer List",
+          path: "transfer",
+          component: () => import("@/pages/transfer-list/Index")
+        },
+        {
+          name: "Exchange List",
+          path: "exchange",
+          component: () => import("@/pages/exchange/Index")
         },
         {
           name: "Notifications",

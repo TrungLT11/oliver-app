@@ -1,15 +1,8 @@
 <template>
-  <v-form @submit.prevent="submit">
+  <v-form ref="form" @submit.prevent="submit">
     <v-container class="px-5" fluid>
       <v-row>
         <v-col cols="12" md="4" class="pa-2">
-          <v-text-field
-            v-model="draft.link"
-            label="Link Sản Phẩm"
-            background-color="grey lighten-4"
-            prepend-inner-icon="mdi-link"
-            :rules="[rules.required]"
-          />
           <v-autocomplete
             v-model="draft.country"
             :items="countryOptions"
@@ -25,6 +18,13 @@
               </span>
             </template>
           </v-autocomplete>
+          <v-text-field
+            v-model="draft.link"
+            label="Link Sản Phẩm"
+            background-color="grey lighten-4"
+            prepend-inner-icon="mdi-link"
+            :rules="[rules.required]"
+          />
           <v-text-field
             v-model="draft.imgLink"
             label="Link Ảnh"
@@ -301,6 +301,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import moment from "moment";
 import computedOrder from "@/models/computedOrder";
 import rules from "@/utils/formRules";
 import newOrder from "@/models/NewOrder";
@@ -315,8 +316,8 @@ export default {
     commission: 5,
     orderDatePicker: false,
     arrivalDatePicker: false,
-    arrivalDate: new Date().toISOString().substr(0, 10),
-    useTax: false,
+    arrivalDate: moment().format("YYYY-MM-DD"),
+    useTax: true,
     fullyTransfered: false,
     exchangeRates: [],
 
@@ -356,40 +357,58 @@ export default {
       text: _i.User,
       value: _i.id
     }));
-    try {
-      const exchangeData = await this.fetchExchange();
-      this.exchangeRates = exchangeData;
-    } catch (error) {
-      window.location.reload();
-    }
+    const exchangeData = await this.fetchExchange();
+    this.exchangeRates = exchangeData;
   },
 
   methods: {
+    submit() {
+      if (!this.$refs.form.validate()) return false;
+      const payload = this.compute();
+      this.$emit("submit", payload);
+    },
     compute() {
       const computedData = new computedOrder({
         ...this.draft,
+        useTax: this.useTax,
         rate: this.exchangeValue,
-        fullyTransfered: this.fullyTransfered
+        fullyTransfered: this.fullyTransfered,
+        commission: this.commission,
+        commissionType: this.commissionType
       });
+      const { orderId, ...orderData } = computedData;
+      return { id: orderId, order: orderData };
     },
     cancel() {
-      this.setEditDialog(false);
+      this.$emit("cancel");
     },
     ...mapActions("order", ["fetchOrderCol", "setEditDialog"]),
     ...mapActions("exchange", ["fetchExchange"])
   },
   watch: {
     order: function(val) {
-      this.draft = val;
+      this.draft = {
+        ...val,
+        totalCommission: "",
+        totalin: val.inM ? val.totalin : "",
+        total: val.outM ? val.total : ""
+      };
+      this.commission = val.chargeRawValue;
+      if (!val.chargeMoney) {
+        this.commissionType = "1";
+      } else {
+        this.commissionType = "2";
+        console.log(val.chargeValue);
+      }
     },
     "draft.country": function(val) {
       if (val === 2) return (this.draft.weightRate = 9.0);
       return (this.draft.weightRate = 11.0);
     },
-    commissionType: function(val) {
-      if (val === "1") return (this.commission = 5);
-      return (this.commission = 30000);
-    },
+    // commissionType: function(val) {
+    //   if (val === "1") return (this.commission = 5);
+    //   return (this.commission = 30000);
+    // },
     arrivalDate(val) {
       this.draft.arrivalDate = val;
     }

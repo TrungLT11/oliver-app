@@ -30,7 +30,9 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="submit" :loading="loading">Đăng Nhập</v-btn>
+              <v-btn color="primary" @click="submit" :loading="loading"
+                >Đăng Nhập</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -43,6 +45,7 @@
 import md5 from "md5";
 import rules from "@/utils/formRules";
 import axios from "axios";
+import { mapActions } from "vuex";
 
 const login = async payload => {
   const baseUrl = process.env.VUE_APP_BASE_URL;
@@ -71,13 +74,15 @@ export default {
         } = await login(payload);
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
+        this.setCurrentUser(user);
         this.$router.push("/");
       } catch (error) {
         alert("Login Failed");
       } finally {
-        this.loading = false
+        this.loading = false;
       }
-    }
+    },
+    ...mapActions("login", ["setCurrentUser"])
   }
 };
 </script>

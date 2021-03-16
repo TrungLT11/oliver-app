@@ -1,7 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import login from "@/store/login";
 import order from "@/store/order";
+import transfer from "@/store/transfer";
 import exchange from "@/store/exchange";
 
 Vue.use(Vuex);
@@ -22,5 +24,5 @@ export default new Vuex.Store({
     }
   },
   actions: {},
-  modules: { order, exchange }
+  modules: { order, exchange, login, transfer }
 });

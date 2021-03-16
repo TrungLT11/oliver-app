@@ -9,6 +9,7 @@
         <Order :order="order" />
       </div>
       <Pagination />
+      <EditOrderDialog />
       <v-overlay :value="fetching" opacity=".75">
         <v-progress-circular
           indeterminate
@@ -18,7 +19,6 @@
         ></v-progress-circular>
       </v-overlay>
     </v-container>
-    <EditOrderDialog />
   </div>
 </template>
 

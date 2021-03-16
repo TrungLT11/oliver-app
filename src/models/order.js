@@ -1,3 +1,4 @@
+import moment from "moment";
 class Order {
   constructor(data) {
     this.arrivalDate = data.ArrivalDate;
@@ -14,7 +15,7 @@ class Order {
     this.method = data.Method;
     this.note = data.Note;
     this.offVal = data.OffVal;
-    this.orderDate = new Date(data.OrderDate).toISOString().substr(0, 10);
+    this.orderDate = moment(data.OrderDate).format("YYYY-MM-DD");
     this.orderId = data.OrderId;
     this.orderNumber = data.OrderNumber;
     this.outM = data.OutM;
@@ -127,6 +128,12 @@ class Order {
     if (this.chargePercent == 0)
       return numberWithCommas(Math.round(this.chargeMoney * this.rate));
     else return 100 * this.chargePercent + "%";
+  }
+
+  get chargeRawValue() {
+    if (this.chargePercent == 0)
+      return Math.round(this.chargeMoney * this.rate);
+    else return 100 * this.chargePercent;
   }
 
   get weightValue() {

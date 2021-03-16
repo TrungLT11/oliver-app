@@ -32,31 +32,19 @@
           single-line
           clearable
           @change="changeFilterUser"
-        ></v-autocomplete>
+        >
+        </v-autocomplete>
       </v-col>
       <v-col>
         <v-autocomplete
-          :items="siteOptions"
-          :value="filterSite"
-          label="Website"
+          :items="typeOptions"
+          label="Loại"
           dense
           outlined
           hide-details
           single-line
           clearable
-          @change="changeFilterSite"
-        ></v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          :items="countryOptions"
-          label="Nước"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterCountry"
+          @change="changeFilterType"
         >
           <template slot="item" slot-scope="{ item }">
             <span>
@@ -67,6 +55,18 @@
             </span>
           </template>
         </v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-select
+          :items="sortOptions"
+          :value="sortCol"
+          label="Rows"
+          dense
+          outlined
+          hide-details
+          single-line
+          @change="setSortCol"
+        ></v-select>
       </v-col>
       <v-col>
         <v-select
@@ -81,41 +81,39 @@
         ></v-select>
       </v-col>
     </v-row>
+    <TransferDialog :userOptions="userOptions" />
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import TransferDialog from "./TransferDialog";
 export default {
+  components: { TransferDialog },
   data: () => ({
-    rowOptions: [10, 20, 30, 40, 50],
+    rowOptions: [15, 30, 45, 60, 90],
     siteOptions: [],
     userOptions: [],
+    sortOptions: [
+      { text: "Ngày nhập", value: "TransferId" },
+      { text: "Ngày chuyển", value: "TransferDate" }
+    ],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
-      { text: "Mới nhận", value: 1, color: "orange" },
-      { text: "Cần Chuyển Khoản", value: 2, color: "red" },
-      { text: "Đã Mua", value: 3, color: "green" },
-      { text: "Hàng Về", value: 4, color: "blue" },
-      { text: "Đã Nhận", value: 5, color: "blue darken-3" }
+      { text: "Đã nhận", value: 1, color: "primary" }
     ],
-    countryOptions: [
-      { text: "USA", value: 1, color: "green" },
-      { text: "UK", value: 2, color: "blue" },
-      { text: "SPAIN", value: 3, color: "orange" },
-      { text: "KOREA", value: 4, color: "red" }
+    typeOptions: [
+      { text: "TDCK", value: 1, color: "green" },
+      { text: "COD-HN", value: 2, color: "blue" },
+      { text: "COD-TINH", value: 3, color: "yellow" },
+      { text: "OTHER", value: 4, color: "red" }
     ]
   }),
   async created() {
-    const siteData = await this.fetchOrderCol({
-      table: "orders",
-      colName: "Site"
-    });
-    const userData = await this.fetchOrderCol({
+    const userData = await this.fetchTransferCol({
       table: "members",
       colName: "User,id"
     });
-    this.siteOptions = siteData.map(_i => _i.Site);
     this.userOptions = userData.map(_i => ({
       text: _i.User,
       value: _i.id
@@ -123,18 +121,19 @@ export default {
   },
   computed: {
     ...mapState({
-      rowsPerPage: state => state.order.rowsPerPage,
-      filterSite: state => state.order.filterSite
+      rowsPerPage: state => state.transfer.rowsPerPage,
+      sortCol: state => state.transfer.sortCol
     })
   },
   methods: {
-    ...mapActions("order", [
+    ...mapActions("transfer", [
       "changeRowsPerPage",
-      "changeFilterSite",
+      "changeFilterType",
       "changeFilterUser",
       "changeFilterStatus",
-      "changeFilterCountry",
-      "fetchOrderCol"
+      "setSortCol",
+      "fetchTransferCol",
+      "setEditDialog"
     ])
   }
 };

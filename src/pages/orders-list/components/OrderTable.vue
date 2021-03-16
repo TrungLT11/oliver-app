@@ -4,10 +4,10 @@
       <thead>
         <tr>
           <th>
-            Link
+            Ảnh
           </th>
           <th>
-            Ảnh
+            Link
           </th>
           <th>
             Màu/Cỡ
@@ -53,20 +53,25 @@
       <tbody>
         <tr>
           <td>
-            <span class="text-truncate">
-              <a :href="order.link">{{ order.hostName }}</a>
-            </span>
-          </td>
-          <td>
             <p>{{ order.brand }}</p>
-            <p>
-              <img
+            <p style="width: 75px" class="mb-1">
+              <!-- <v-img
                 :src="order.imgLink"
                 alt="Ảnh SP"
-                width="auto"
-                height="75px"
+                max-width="75"
+                max-height="75"
+              /> -->
+              <silent-box
+                :image="{
+                  src: order.imgLink
+                }"
               />
             </p>
+          </td>
+          <td>
+            <span class="text-truncate">
+              <a :href="order.link" class="text-truncate d-inline-block" style="max-width:120px">{{ order.hostName }}</a>
+            </span>
           </td>
           <td>{{ `${order.color} (${order.size})` }}</td>
           <td>{{ `${order.price} (${order.quantity})` }}</td>
@@ -100,4 +105,18 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss">
+.silentbox-item {
+  img {
+    max-height: 75px;
+    max-width: 75px;
+    box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+      0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+  }
+}
+tbody {
+  tr:hover {
+    background-color: transparent !important;
+  }
+}
+</style>

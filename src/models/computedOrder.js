@@ -1,7 +1,10 @@
+import psl from "psl";
 class Order {
   constructor(data) {
+    const parsed = psl.parse(data.link);
+    this.site = parsed.domain;
     this.rate = parseInt(data.rate);
-    this.arrivalDate = data.arrivalDate;
+    this.arrivalDate = data.arrivalDate || "Updating";
     this.brand = data.brand;
     this.chargeMoney = data.chargeMoney || 0;
     this.chargePercent = data.chargePercent || 0;
@@ -17,7 +20,7 @@ class Order {
     this.offVal = data.offVal || 0;
     this.orderDate = data.orderDate;
     this.orderId = data.orderId;
-    this.orderNumber = data.orderNumber;
+    this.orderNumber = data.orderNumber || "Updating";
     this.outM = data.outM;
     this.price = data.price || 0;
     this.quantity = data.quantity || 0;
@@ -28,7 +31,7 @@ class Order {
     this.size = data.size;
     this.status = data.status;
     this.surCharge = data.surCharge || 0;
-    this.tax = data.tax;
+    this.tax = data.useTax ? data.tax : 0;
     this.total = data.total;
     this.totalCommission = data.totalCommission;
     this.totalin = data.totalin || 0;
@@ -38,6 +41,14 @@ class Order {
     this.weightRate = data.weightRate || 0;
     this.inM = 0;
     this.outM = 0;
+
+    if (data.commissionType == "1") {
+      this.chargePercent = data.commission / 100;
+      this.chargeMoney = 0;
+    } else {
+      this.chargeMoney = data.commission / data.rate;
+      this.chargePercent = 0;
+    }
 
     if (!this.shippingCharge)
       this.shippingCharge = this.weight * this.weightRate;

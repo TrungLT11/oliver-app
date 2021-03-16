@@ -86,6 +86,16 @@ export default {
         title: "new-order",
         to: "/order/new"
       },
+      {
+        icon: "mdi-cash-multiple",
+        title: "transfer-list",
+        to: "/transfer"
+      },
+      {
+        icon: "mdi-currency-sign",
+        title: "exchange-list",
+        to: "/exchange"
+      },
       // {
       //   title: "rtables",
       //   icon: "mdi-clipboard-outline",

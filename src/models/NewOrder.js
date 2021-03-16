@@ -1,8 +1,13 @@
+import moment from "moment";
+const userDataString = localStorage.getItem("user");
+const userData = userDataString ? JSON.parse(userDataString) : {};
+
 const newOrder = () => ({
   arrivalDate: "",
   brand: "",
   chargeMoney: "",
-  chargePercent: "",
+  chargePercent: 5,
+  chargeRawValue: 5,
   color: "",
   country: 1,
   debt: "",
@@ -13,25 +18,25 @@ const newOrder = () => ({
   method: 0,
   note: "",
   offVal: 0,
-  orderDate: new Date().toISOString().substr(0, 10),
+  orderDate: moment().format("YYYY-MM-DD"),
   orderId: "",
   orderNumber: "",
   outM: "",
   price: "",
   quantity: 1,
   rate: "",
-  shipWeb: "",
+  shipWeb: 0,
   shippingCharge: "",
   site: "",
   size: "",
   status: 1,
-  surCharge: "",
-  tax: "",
+  surCharge: 0,
+  tax: 0,
   total: "",
   totalCommission: "",
   totalin: "",
   transfered: "",
-  userId: "",
+  userId: userData.id,
   weight: 0,
   weightRate: 11.0
 });

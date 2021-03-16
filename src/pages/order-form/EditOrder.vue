@@ -9,13 +9,17 @@
   >
     <v-card>
       <v-toolbar dark color="primary">
-        <v-btn icon dark @click="setEditDialog(false)">
+        <v-btn icon dark @click="cancel">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>Sửa Đơn hàng</v-toolbar-title>
       </v-toolbar>
       <v-container class="ma-0 pa-3" fluid>
-        <order-form @close="$emit('input', false)" :order="editingOrder" />
+        <order-form
+          :order="editingOrder"
+          @submit="update"
+          @cancel="cancel"
+        />
       </v-container>
     </v-card>
   </v-dialog>
@@ -34,7 +38,14 @@ export default {
     })
   },
   methods: {
-    ...mapActions("order", ["setEditDialog", "setEditingOrder"])
+    update({ id, order }) {
+      this.updateOrder({ id, order });
+      this.cancel();
+    },
+    cancel() {
+      this.setEditDialog(false);
+    },
+    ...mapActions("order", ["setEditDialog", "setEditingOrder", "updateOrder"])
   },
   watch: {
     editDialog(val) {

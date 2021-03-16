@@ -44,5 +44,7 @@
   "wizard": "Wizard",
 
   "order-list": "Danh Sách Đơn Hàng",
+  "transfer-list": "Công Nợ",
+  "exchange-list": "Tỉ Giá",
   "new-order": "Nhập Đơn Hàng"
 }
