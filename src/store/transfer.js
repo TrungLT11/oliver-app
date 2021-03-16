@@ -75,7 +75,6 @@ export default {
       dispatch("fetchTransfers");
     },
     changeFilterType({ state, dispatch }, value) {
-      console.log(value);
       state.filterType = value || "";
       state.page = 1;
       dispatch("fetchTransfers");

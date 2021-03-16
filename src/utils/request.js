@@ -18,7 +18,6 @@ const authInterceptor = config => {
 request.interceptors.request.use(authInterceptor);
 
 const errorInterceptor = error => {
-  console.log(error.response)
   switch (error.response.status) {
     case 401: // authentication error, logout the user
       alert("Please login again");
