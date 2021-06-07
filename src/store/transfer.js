@@ -7,19 +7,30 @@ export default {
     filterType: "",
     filterUser: -1,
     filterCountry: -1,
+    filterOrder: -1,
     page: 1,
     rowsPerPage: 30,
     sortCol: "TransferId",
     total: 0,
     totalTransfer: 0,
     fetching: false,
+    editingTransfer: null,
+    createDialog: false,
     editDialog: false,
     multiSelected: []
   }),
 
   mutations: {},
 
-  getters: {},
+  getters: {
+    conditionPayload: state => {
+      const { filterUser, filterOrder } = state;
+      const payload = {};
+      if (filterUser != -1) payload[`UserId`] = filterUser;
+      if (filterOrder != -1) payload[`Status`] = filterOrder;
+      return payload;
+    }
+  },
 
   actions: {
     async fetchTransfers({ state }) {
@@ -40,8 +51,12 @@ export default {
       state.totalTransfer = totalTransfer;
       state.fetching = false;
     },
-    async fetchTransferCol({ state }, { table, colName }) {
-      const { data = [] } = await api.fetchTransferCol({ table, colName });
+    async fetchTransferCol({ state }, { table, colName, conditions }) {
+      const { data = [] } = await api.fetchTransferCol({
+        table,
+        colName,
+        conditions
+      });
       return data;
     },
     async updateStatus({ state, dispatch }, { status, id }) {
@@ -57,7 +72,10 @@ export default {
       alert("SUCCESS");
     },
     async updateTransfer({ state, dispatch }, { id, transfer }) {
-      await api.updateTransfer({ id, transfer });
+      const transferData = { ...transfer };
+      delete transferData.user;
+      delete transferData.transferId;
+      await api.updateTransfer({ id, transfer: transferData });
       dispatch("fetchTransfers");
     },
     async changeMultiStatus({ state, dispatch }, status) {
@@ -95,11 +113,19 @@ export default {
       state.page = 1;
       dispatch("fetchTransfers");
     },
+    changeFilterOrder({ state, dispatch }, value) {
+      state.filterOrder = value || -1;
+      state.page = 1;
+      dispatch("fetchTransfers");
+    },
     setEditingTransfer({ state }, value) {
       state.editingTransfer = value;
     },
     setEditDialog({ state }, value) {
       state.editDialog = value;
+    },
+    setCreateDialog({ state }, value) {
+      state.createDialog = value;
     },
     setMultiSelected({ state }, value) {
       state.multiSelected = value;

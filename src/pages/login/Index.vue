@@ -72,10 +72,11 @@ export default {
         const {
           data: { data: user, token }
         } = await login(payload);
+        const redirectPath = this.$route.query.redirect || "/";
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
         this.setCurrentUser(user);
-        this.$router.push("/");
+        this.$router.push(redirectPath);
       } catch (error) {
         alert("Login Failed");
       } finally {

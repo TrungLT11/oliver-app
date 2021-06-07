@@ -10,7 +10,7 @@
             Link
           </th>
           <th>
-            Màu/Cỡ
+            Màu (Cỡ)
           </th>
           <th>
             Giá (SL)
@@ -33,7 +33,7 @@
           <th>
             Phí VC
           </th>
-          <th>
+          <th v-if="user.admin">
             Mua Vào
           </th>
           <th>
@@ -42,10 +42,10 @@
           <th>
             Tổng
           </th>
-          <th>
+          <th v-if="user.admin">
             Công Mua
           </th>
-          <th>
+          <th v-if="user.admin">
             Note
           </th>
         </tr>
@@ -53,14 +53,10 @@
       <tbody>
         <tr>
           <td>
-            <p>{{ order.brand }}</p>
-            <p style="width: 75px" class="mb-1">
-              <!-- <v-img
-                :src="order.imgLink"
-                alt="Ảnh SP"
-                max-width="75"
-                max-height="75"
-              /> -->
+            <v-chip v-if="order.brand" x-small label outlined>
+              {{ order.brand }}
+            </v-chip>
+            <p style="width: 75px" class="ma-0 mt-1">
               <silent-box
                 :image="{
                   src: order.imgLink
@@ -70,7 +66,13 @@
           </td>
           <td>
             <span class="text-truncate">
-              <a :href="order.link" class="text-truncate d-inline-block" style="max-width:120px">{{ order.hostName }}</a>
+              <a
+                :href="order.link"
+                target="_blank"
+                class="text-truncate d-inline-block"
+                style="max-width:120px"
+                >{{ order.hostName }}</a
+              >
             </span>
           </td>
           <td>{{ `${order.color} (${order.size})` }}</td>
@@ -85,11 +87,11 @@
           <td>{{ order.surCharge }}</td>
           <td>{{ `${order.weight} (${order.weightRate})` }}</td>
           <td>{{ order.shippingValue }}</td>
-          <td>{{ order.totalInValue }}</td>
+          <td v-if="user.admin">{{ order.totalInValue }}</td>
           <td>{{ order.totalOutValue }}</td>
           <td>{{ order.totalValue }}</td>
-          <td>{{ order.totalCommissionValue }}</td>
-          <td>{{ order.note }}</td>
+          <td v-if="user.admin">{{ order.totalCommissionValue }}</td>
+          <td v-if="user.admin">{{ order.note }}</td>
         </tr>
       </tbody>
     </template>
@@ -97,11 +99,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   props: ["order"],
-  data() {
-    return {};
-  }
+  computed: {
+    ...mapState({
+      user: state => state.login.currentUser
+    })
+  },
 };
 </script>
 

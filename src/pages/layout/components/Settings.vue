@@ -1,6 +1,9 @@
 <template>
   <div id="settings-wrapper">
-    <v-btn id="settings" class="ma-2" min-width="0" icon>
+    <v-btn id="logout" class="ma-2" min-width="0" icon large @click="logout()">
+      <v-icon>mdi-logout</v-icon>
+    </v-btn>
+    <v-btn id="settings" class="ma-2" min-width="0" icon large>
       <v-icon>mdi-cog</v-icon>
     </v-btn>
     <v-menu
@@ -51,51 +54,6 @@
               />
             </v-col>
           </v-row>
-
-          <v-divider class="my-4 secondary" />
-
-          <v-row align="center" no-gutters>
-            <v-col cols="auto">
-              Sidebar Image
-            </v-col>
-
-            <v-spacer />
-
-            <v-col cols="auto">
-              <v-switch
-                v-model="showImg"
-                class="ma-0 pa-0"
-                color="secondary"
-                hide-details
-              />
-            </v-col>
-          </v-row>
-
-          <v-divider class="my-4 secondary" />
-
-          <strong class="mb-3 d-inline-block">IMAGES</strong>
-
-          <v-item-group
-            v-model="image"
-            class="d-flex justify-space-between mb-3"
-          >
-            <v-item
-              v-for="image in images"
-              :key="image"
-              :value="image"
-              class="mx-1"
-            >
-              <template v-slot="{ active, toggle }">
-                <v-sheet
-                  :class="active && 'v-settings__item--active'"
-                  class="d-inline-block v-settings__item"
-                  @click="toggle"
-                >
-                  <v-img :src="image" height="100" width="50" />
-                </v-sheet>
-              </template>
-            </v-item>
-          </v-item-group>
         </v-card-text>
       </v-card>
     </v-menu>
@@ -113,8 +71,8 @@ export default {
   mixins: [Proxyable],
 
   data: () => ({
-    color: "#E91E63",
-    colors: ["#9C27b0", "#00CAE3", "#4CAF50", "#ff9800", "#E91E63", "#FF5252"],
+    color: "#4CAF50",
+    colors: ["#424242", "#2196F3", "#4CAF50", "#ff9800", "#F44336"],
     image:
       "https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-1.jpg",
     images: [
@@ -134,7 +92,9 @@ export default {
 
   watch: {
     color(val) {
-      this.$vuetify.theme.themes[this.isDark ? "dark" : "light"].primary = val;
+      this.$vuetify.theme.themes[
+        this.$vuetify.theme.dark ? "dark" : "light"
+      ].primary = val;
     },
     showImg(val) {
       if (!val) {
@@ -153,6 +113,11 @@ export default {
   },
 
   methods: {
+    logout() {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      this.$router.push("/login");
+    },
     ...mapMutations({
       setBarImage: "SET_BAR_IMAGE"
     })

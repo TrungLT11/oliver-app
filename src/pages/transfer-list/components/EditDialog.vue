@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :value="editDialog" width="450" persistent>
+  <v-dialog :value="editDialog" width="450" origin="bottom right" persistent>
     <v-form ref="form" @submit.prevent="submit">
       <v-card>
         <v-toolbar dark color="primary">
-          <v-toolbar-title>Nhập Mới</v-toolbar-title>
+          <v-toolbar-title>Sửa đổi</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon dark @click="cancel">
             <v-icon>mdi-close</v-icon>
@@ -21,7 +21,7 @@
             <template v-slot:activator="{ on, attrs }">
               <v-text-field
                 v-model="transfer.transferDate"
-                label="Transaction Date"
+                label="Ngày Giao Dịch"
                 prepend-inner-icon="mdi-calendar"
                 readonly
                 v-bind="attrs"
@@ -37,7 +37,7 @@
           <v-row>
             <v-col>
               <v-text-field
-                v-model.number="transfer.amount"
+                v-model.number="transfer.amounts"
                 :rules="[rules.required]"
                 type="number"
                 min="0"
@@ -47,7 +47,7 @@
             </v-col>
             <v-col>
               <v-autocomplete
-                v-model="transfer.currency"
+                v-model="transfer.country"
                 :items="countryOptions"
                 label="Loại tiền"
                 prepend-inner-icon="mdi-currency-sign"
@@ -69,12 +69,15 @@
             prepend-inner-icon="mdi-currency-sign"
             readonly
           />
-          <v-text-field
+          <v-textarea
             v-model="transfer.comment"
+            rows="1"
+            auto-grow
             label="Nội dung"
             prepend-inner-icon="mdi-comment-outline"
           />
           <v-autocomplete
+            v-if="user.admin"
             v-model="transfer.userId"
             :items="userOptions"
             label="User"
@@ -82,6 +85,7 @@
           >
           </v-autocomplete>
           <v-autocomplete
+            v-if="user.admin"
             v-model="transfer.type"
             :items="typeOptions"
             label="Loại"
@@ -115,6 +119,7 @@
 import { mapActions, mapState } from "vuex";
 import rules from "@/utils/formRules";
 import moment from "moment";
+import { pick } from "lodash";
 export default {
   props: ["userOptions"],
   data: () => ({
@@ -148,7 +153,9 @@ export default {
   computed: {
     ...mapState({
       user: state => state.login.currentUser,
-      editDialog: state => state.transfer.editDialog
+      editingTransfer: state => state.transfer.editingTransfer,
+      editDialog: state => state.transfer.editDialog,
+      editingTransfer: state => state.transfer.editingTransfer
     })
   },
   async created() {
@@ -157,30 +164,41 @@ export default {
   },
   methods: {
     submit() {
-      console.log(this.$refs.form.validate());
       if (!this.$refs.form.validate()) return false;
+      const vnd = this.transfer.country
+        ? this.transfer.amounts * this.transfer.rate
+        : this.transfer.amounts;
+      const transferData = {
+        ...this.transfer,
+        vnd
+      };
+      this.update({ id: this.transfer.transferId, transfer: transferData });
     },
-    create({ id, transfer }) {
-      this.createTransfer({ id, transfer });
+    update({ id, transfer }) {
+      this.updateTransfer({ id, transfer });
       this.cancel();
     },
     cancel() {
-      this.$refs.form.reset();
+      // this.$refs.form.reset();
       this.setEditDialog(false);
     },
     ...mapActions("exchange", ["fetchExchange"]),
-    ...mapActions("transfer", ["setEditDialog", "newTransfer"])
+    ...mapActions("transfer", ["setEditDialog", "updateTransfer"])
   },
   watch: {
     editDialog(val) {
-      if (val) {
-        this.transfer.userId = this.user.id;
-        this.transfer.type = 4;
-        this.transfer.transferDate = moment().format("YYYY-MM-DD");
-        this.transfer.currency = 0;
-      }
+      if (val)
+        this.transfer = {
+          ...this.editingTransfer,
+          amounts: this.editingTransfer.country
+            ? this.editingTransfer.amounts
+            : this.editingTransfer.vnd,
+          transferDate: moment(this.editingTransfer.transferDate).format(
+            "YYYY-MM-DD"
+          )
+        };
     },
-    "transfer.currency"(val) {
+    "transfer.country"(val) {
       this.transfer.rate = this.exchangeRates[val - 1]?.rate || 0;
     }
   }

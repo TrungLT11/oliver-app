@@ -10,7 +10,7 @@
 import { mapActions, mapState } from "vuex";
 export default {
   methods: {
-    ...mapActions("transfer", ["setCreateDialog"])
+    ...mapActions("user", ["setCreateDialog"])
   }
 };
 </script>

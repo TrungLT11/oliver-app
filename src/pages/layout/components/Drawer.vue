@@ -96,6 +96,16 @@ export default {
         title: "exchange-list",
         to: "/exchange"
       },
+      {
+        icon: "mdi-account-box-outline",
+        title: "Thành Viên",
+        to: "/user"
+      },
+      {
+        icon: "mdi-finance",
+        title: "Thống kê",
+        to: "/statistic"
+      },
       // {
       //   title: "rtables",
       //   icon: "mdi-clipboard-outline",

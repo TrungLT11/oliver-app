@@ -28,17 +28,13 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapState, mapGetters } from "vuex";
 export default {
   data: () => ({
     totalOrder: 0
   }),
-  async created() {
-    const response = await this.fetchOrderCol({
-      table: "orders",
-      colName: "sum(Total*Rate)"
-    });
-    this.totalOrder = Math.round(response[0]["sum(Total*Rate)"] || 0);
+  created() {
+    this.getTotalCost();
   },
   computed: {
     balance() {
@@ -49,11 +45,30 @@ export default {
     },
     ...mapState({
       totalTransfer: state => state.transfer.totalTransfer,
-      sortCol: state => state.transfer.sortCol
-    })
+      sortCol: state => state.transfer.sortCol,
+      currentUser: state => state.login.currentUser
+    }),
+    ...mapGetters("transfer", ["conditionPayload"])
   },
   methods: {
-    ...mapActions("order", ["fetchOrderCol"])
+    async getTotalCost() {
+      const conditions = {...this.conditionPayload}
+      if (!this.currentUser.admin) conditions.UserId = this.currentUser.id;
+      const response = await this.fetchTransferCol({
+        table: "orders",
+        colName: "sum((Total+ShippingCharge)*Rate)",
+        conditions
+      });
+      this.totalOrder = Math.round(
+        response[0]["sum((Total+ShippingCharge)*Rate)"] || 0
+      );
+    },
+    ...mapActions("transfer", ["fetchTransferCol"])
+  },
+  watch: {
+    conditionPayload(val) {
+      this.getTotalCost();
+    }
   }
 };
 </script>

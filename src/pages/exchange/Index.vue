@@ -8,6 +8,7 @@
           :smallValue="usRate.toLocaleString()"
         >
           <v-text-field
+            v-if="currentUser.admin"
             class="ma-3"
             v-model="usRateInput"
             type="number"
@@ -24,6 +25,7 @@
           :smallValue="ukRate.toLocaleString()"
         >
           <v-text-field
+            v-if="currentUser.admin"
             class="ma-3"
             v-model="ukRateInput"
             type="number"
@@ -40,6 +42,7 @@
           :smallValue="spainRate.toLocaleString()"
         >
           <v-text-field
+            v-if="currentUser.admin"
             class="ma-3"
             v-model="spainRateInput"
             type="number"
@@ -56,6 +59,7 @@
           :smallValue="krRate.toLocaleString()"
         >
           <v-text-field
+            v-if="currentUser.admin"
             class="ma-3"
             v-model="krRateInput"
             type="number"
@@ -66,6 +70,14 @@
         </base-material-stats-card>
       </v-col>
     </v-row>
+    <v-overlay :value="fetching" opacity=".75">
+      <v-progress-circular
+        indeterminate
+        :size="50"
+        :width="5"
+        color="primary"
+      ></v-progress-circular>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -85,7 +97,12 @@ export default {
       krRateInput: 0
     };
   },
-  computed: {},
+  computed: {
+    ...mapState({
+      fetching: state => state.exchange.fetching,
+      currentUser: state => state.login.currentUser
+    })
+  },
   created() {
     this.initialize();
   },
@@ -102,7 +119,7 @@ export default {
       this.krRateInput = response[3].rate;
     },
     async updateExchange(id, rate) {
-      await this.updateExchangeRate({id, rate});
+      await this.updateExchangeRate({ id, rate });
       this.initialize();
     },
     ...mapActions("exchange", ["fetchExchange", "updateExchangeRate"])

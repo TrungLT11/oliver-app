@@ -1,17 +1,29 @@
 <template>
   <v-sheet elevation="2" rounded="b-lg t-xl">
-    <v-sheet class="pa-3" elevation="2" :color="transfer.cardColor" dark rounded="xl">
+    <v-sheet
+      class="pa-3"
+      elevation="2"
+      :color="transfer.cardColor"
+      dark
+      rounded="xl"
+    >
       <v-row align="center">
         <v-btn icon>
           <v-icon>mdi-currency-usd</v-icon>
         </v-btn>
         <span class="text-h4" v-text="transfer.vnd.toLocaleString()"></span>
         <v-spacer></v-spacer>
-        <v-btn icon @click="deleteTransferClick">
+        <v-btn v-if="canEditForUser" icon @click="editTransfer">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn v-if="canDelete" icon @click="deleteTransferClick">
           <v-icon>mdi-close-thick</v-icon>
         </v-btn>
-        <v-btn v-if="!transfer.status" icon @click="changeStatus(1)">
+        <v-btn v-if="!transfer.status && canMod" icon @click="changeStatus(1)">
           <v-icon>mdi-check-bold</v-icon>
+        </v-btn>
+        <v-btn v-if="transfer.status && canDelete" icon @click="changeStatus(0)">
+          <v-icon>mdi-undo-variant</v-icon>
         </v-btn>
       </v-row>
     </v-sheet>
@@ -55,14 +67,32 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   props: ["transfer"],
   components: {
     UserDropdown: () => import("./UserDropdown")
   },
   created() {},
+  computed: {
+    canDelete() {
+      return this.user.admin === 1;
+    },
+    canMod() {
+      return this.user.admin != 0;
+    },
+    canEditForUser() {
+      return this.transfer.status === 0 || this.user.admin;
+    },
+    ...mapState({
+      user: state => state.login.currentUser
+    })
+  },
   methods: {
+    editTransfer() {
+      this.setEditDialog(true);
+      this.setEditingTransfer(this.transfer);
+    },
     changeStatus(status) {
       const id = this.transfer.transferId;
       this.updateStatus({ id, status });
@@ -71,7 +101,12 @@ export default {
       if (window.confirm("Confirm DELETE?"))
         this.deleteTransfer(this.transfer.transferId);
     },
-    ...mapActions("transfer", ["updateStatus", "deleteTransfer"])
+    ...mapActions("transfer", [
+      "updateStatus",
+      "deleteTransfer",
+      "setEditingTransfer",
+      "setEditDialog"
+    ])
   }
 };
 </script>

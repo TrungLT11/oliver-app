@@ -5,7 +5,6 @@
         <v-pagination
           :value="page"
           :length="totalPage"
-          circle
           @input="changePage"
         ></v-pagination>
       </v-col>

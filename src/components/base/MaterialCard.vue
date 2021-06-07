@@ -5,9 +5,10 @@
         v-if="avatar"
         size="128"
         class="mx-auto v-card--material__avatar elevation-3"
-        color="grey"
+        color="primary"
       >
-        <v-img :src="avatar" />
+        <!-- <v-img :src="avatar" /> -->
+        MA
       </v-avatar>
 
       <v-sheet

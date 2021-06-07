@@ -5,6 +5,7 @@ import login from "@/store/login";
 import order from "@/store/order";
 import transfer from "@/store/transfer";
 import exchange from "@/store/exchange";
+import user from "@/store/user";
 
 Vue.use(Vuex);
 
@@ -24,5 +25,5 @@ export default new Vuex.Store({
     }
   },
   actions: {},
-  modules: { order, exchange, login, transfer }
+  modules: { order, exchange, login, transfer, user }
 });

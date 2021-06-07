@@ -4,6 +4,7 @@
       <v-col>
         <v-autocomplete
           :items="statusOptions"
+          :value="filterStatus"
           label="Loại đơn"
           dense
           outlined
@@ -15,16 +16,17 @@
           <template slot="item" slot-scope="{ item }">
             <span>
               <v-icon :size="12" :color="item.color" class="mr-1">
-                mdi-checkbox-blank-circle
+                mdi-checkbox-blank
               </v-icon>
               <span>{{ item.text }}</span>
             </span>
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col>
+      <v-col v-if="this.currentUser.admin">
         <v-autocomplete
           :items="userOptions"
+          :value="filterUser"
           label="User"
           dense
           outlined
@@ -50,6 +52,7 @@
       <v-col>
         <v-autocomplete
           :items="countryOptions"
+          :value="filterCountry"
           label="Nước"
           dense
           outlined
@@ -109,22 +112,28 @@ export default {
   async created() {
     const siteData = await this.fetchOrderCol({
       table: "orders",
-      colName: "Site"
+      colName: "site"
     });
     const userData = await this.fetchOrderCol({
       table: "members",
-      colName: "User,id"
+      colName: "user, mobile, id"
     });
-    this.siteOptions = siteData.map(_i => _i.Site);
+    this.siteOptions = siteData.map(_i => _i.site || "blank");
     this.userOptions = userData.map(_i => ({
-      text: _i.User,
+      text: [_i.user, _i.mobile.replace(/[^\d]/g, "")]
+        .filter(Boolean)
+        .join(" - "),
       value: _i.id
     }));
   },
   computed: {
     ...mapState({
       rowsPerPage: state => state.order.rowsPerPage,
-      filterSite: state => state.order.filterSite
+      filterSite: state => state.order.filterSite,
+      filterStatus: state => state.order.filterStatus,
+      filterCountry: state => state.order.filterCountry,
+      filterUser: state => state.order.filterUser,
+      currentUser: state => state.login.currentUser
     })
   },
   methods: {

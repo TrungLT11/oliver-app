@@ -3,7 +3,7 @@ import Router from "vue-router";
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: "hash",
   base: process.env.BASE_URL,
   routes: [
@@ -39,6 +39,16 @@ export default new Router({
           component: () => import("@/pages/exchange/Index")
         },
         {
+          name: "User List",
+          path: "user",
+          component: () => import("@/pages/user-list/Index")
+        },
+        {
+          name: "Statistic",
+          path: "statistic",
+          component: () => import("@/pages/statistic/Index")
+        },
+        {
           name: "Notifications",
           path: "components/notifications",
           component: () => import("@/views/dashboard/component/Notifications")
@@ -69,3 +79,14 @@ export default new Router({
     }
   ]
 });
+
+router.beforeEach((to, from, next) => {
+  const isAuthorized = localStorage.getItem("token");
+  const toLogin = to.name === "Login";
+  if (!isAuthorized && !toLogin) {
+    return next({ path: "/login", query: { redirect: to.path } });
+  }
+  next();
+});
+
+export default router;

@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve --open",
-    "serve": "vue-cli-service serve",
+    "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
@@ -17,6 +17,7 @@
     "core-js": "^3.6.2",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
+    "millify": "^4.0.0",
     "moment": "^2.29.1",
     "psl": "^1.8.0",
     "vue": "^2.6.11",

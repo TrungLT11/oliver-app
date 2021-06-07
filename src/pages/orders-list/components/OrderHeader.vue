@@ -36,6 +36,7 @@
       <v-menu top rounded="pill" offset-y nudge-top="5">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
+            v-if="canMod"
             class="mr-1"
             small
             depressed
@@ -107,6 +108,7 @@
       </v-menu>
       <debt-dropdown :order="order" />
       <v-btn
+        v-if="canEditForUser"
         class="mr-1"
         dark
         small
@@ -117,6 +119,7 @@
         <v-icon small>mdi-pencil</v-icon>
       </v-btn>
       <v-btn
+        v-if="canDelete || !order.status"
         class="mr-1"
         dark
         small
@@ -127,6 +130,7 @@
         <v-icon small>mdi-delete</v-icon>
       </v-btn>
       <v-simple-checkbox
+        v-if="canMod"
         :ripple="false"
         :value="selected"
         @click="selectMultiple"
@@ -143,11 +147,21 @@ export default {
   components: { UserDropdown, DebtDropdown },
   props: ["order"],
   computed: {
+    canDelete() {
+      return this.user.admin === 1;
+    },
+    canMod() {
+      return this.user.admin != 0;
+    },
+    canEditForUser() {
+      return this.order.status < 4 || this.user.admin;
+    },
     selected() {
       return this.multiSelected?.includes(this.order.orderId);
     },
     ...mapState({
-      multiSelected: state => state.order.multiSelected
+      multiSelected: state => state.order.multiSelected,
+      user: state => state.login.currentUser
     })
   },
   methods: {

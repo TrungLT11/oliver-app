@@ -1,8 +1,7 @@
-import psl from "psl";
+import extractDomain from "extract-domain";
 class Order {
   constructor(data) {
-    const parsed = psl.parse(data.link);
-    this.site = parsed.domain;
+    this.site = extractDomain(data.link) || "";
     this.rate = parseInt(data.rate);
     this.arrivalDate = data.arrivalDate || "Updating";
     this.brand = data.brand;
@@ -14,6 +13,7 @@ class Order {
     this.gcCode = data.gcCode;
     this.imgLink = data.imgLink;
     this.inM = data.inM;
+    // this.inVnd = data.inVnd;
     this.link = data.link;
     this.method = data.method;
     this.note = data.note;
@@ -22,6 +22,7 @@ class Order {
     this.orderId = data.orderId;
     this.orderNumber = data.orderNumber || "Updating";
     this.outM = data.outM;
+    // this.outVnd = data.outVnd;
     this.price = data.price || 0;
     this.quantity = data.quantity || 0;
     this.rate = data.rate;
@@ -39,8 +40,6 @@ class Order {
     this.userId = data.userId;
     this.weight = data.weight || 0;
     this.weightRate = data.weightRate || 0;
-    this.inM = 0;
-    this.outM = 0;
 
     if (data.commissionType == "1") {
       this.chargePercent = data.commission / 100;
@@ -57,6 +56,7 @@ class Order {
         this.quantity * (1 - this.offVal / 100) * this.price +
         this.surCharge +
         this.shipWeb;
+      this.inM = 0;
     } else {
       this.totalin = this.totalin / this.rate;
       this.inM = 1;
@@ -70,6 +70,7 @@ class Order {
         this.surCharge +
         this.shipWeb +
         this.chargeMoney;
+      this.outM = 0;
     } else {
       this.total = this.total / this.rate;
       this.outM = 1;

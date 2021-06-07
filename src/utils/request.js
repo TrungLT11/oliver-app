@@ -20,7 +20,6 @@ request.interceptors.request.use(authInterceptor);
 const errorInterceptor = error => {
   switch (error.response.status) {
     case 401: // authentication error, logout the user
-      alert("Please login again");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       router.push("/login");

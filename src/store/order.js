@@ -19,7 +19,17 @@ export default {
 
   mutations: {},
 
-  getters: {},
+  getters: {
+    conditionPayload: state => {
+      const { filterSite, filterStatus, filterUser, filterCountry } = state;
+      const payload = {};
+      if (filterSite.length) payload[`orders.Site`] = filterSite;
+      if (filterStatus != -1) payload[`orders.Status`] = filterStatus;
+      if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
+      if (filterUser != -1) payload[`orders.UserId`] = filterUser;
+      return payload;
+    }
+  },
 
   actions: {
     async fetchOrders({ state }) {
@@ -38,8 +48,8 @@ export default {
       state.total = total;
       state.fetching = false;
     },
-    async fetchOrderCol({ state }, { table, colName }) {
-      const { data = [] } = await api.fetchOrderCol({ table, colName });
+    async fetchOrderCol({ state }, { table, colName, orderBy }) {
+      const { data = [] } = await api.fetchOrderCol({ table, colName, orderBy });
       return data;
     },
     async updateStatus({ state, dispatch }, { status, id }) {
@@ -52,7 +62,7 @@ export default {
     },
     async createOrder({ state, dispatch }, order) {
       await api.createOrder({ order });
-      alert("SUCCESS")
+      alert("SUCCESS");
     },
     async updateOrder({ state, dispatch }, { id, order }) {
       await api.updateOrder({ id, order });

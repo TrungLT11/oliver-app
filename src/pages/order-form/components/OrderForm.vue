@@ -2,7 +2,11 @@
   <v-form ref="form" @submit.prevent="submit">
     <v-container class="px-5" fluid>
       <v-row>
-        <v-col cols="12" md="4" class="pa-2">
+        <v-col
+          cols="12"
+          v-bind="{ md: currentUser.admin ? 4 : 12 }"
+          class="pa-2"
+        >
           <v-autocomplete
             v-model="draft.country"
             :items="countryOptions"
@@ -57,6 +61,7 @@
               prepend-inner-icon="mdi-counter"
               :rules="[rules.required]"
             />
+          </v-row><v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.price"
               label="Giá"
@@ -71,37 +76,13 @@
             v-model.number="draft.offVal"
             type="number"
             min="0"
+            max="100"
             label="Discount"
             prepend-inner-icon="mdi-percent-outline"
           />
         </v-col>
         <!-- v-model="draft.xxx" -->
-        <v-col cols="12" md="4" class="pa-2">
-          <v-menu
-            v-model="orderDatePicker"
-            :close-on-content-click="true"
-            :nudge-right="40"
-            transition="scale-transition"
-            offset-y
-            min-width="auto"
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                v-model="draft.orderDate"
-                label="Order Date"
-                prepend-inner-icon="mdi-calendar"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              class="ma-0 pa-0"
-              v-model="draft.orderDate"
-              @input="orderDatePicker = false"
-            ></v-date-picker>
-          </v-menu>
-
+        <v-col cols="12" md="4" class="pa-2" v-show="currentUser.admin">
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.surCharge"
@@ -139,11 +120,13 @@
           </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
-              v-model="draft.tax"
+              v-model.number="draft.tax"
               label="Thuế"
-              prepend-inner-icon="mdi-currency-usd"
+              min="0"
+              max="100"
+              prepend-inner-icon="mdi-percent-outline"
             />
-            <v-switch v-model="useTax"></v-switch>
+            <v-switch v-model="useTax" flat></v-switch>
           </v-row>
 
           <v-row class="ma-0 pa-0" justify="space-between">
@@ -172,6 +155,8 @@
               background-color="green lighten-5"
               prepend-inner-icon="mdi-currency-usd"
             />
+          </v-row>
+          <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.shippingCharge"
               label="Phí Ship"
@@ -191,6 +176,9 @@
               background-color="green lighten-5"
               prepend-inner-icon="mdi-currency-usd"
             />
+            <!-- <v-checkbox v-model="draft.inVnd" label="VND"></v-checkbox> -->
+          </v-row>
+          <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.total"
               label="Bán Ra"
@@ -198,24 +186,51 @@
               placeholder="Auto"
               prepend-inner-icon="mdi-currency-usd"
             />
+            <!-- <v-checkbox v-model="draft.outVnd" label="VND"></v-checkbox> -->
           </v-row>
         </v-col>
         <!-- v-model="draft.xxx" -->
-        <v-col cols="12" md="4" class="pa-2">
-          <v-autocomplete
-            v-model="draft.method"
-            :items="methodOptions"
-            label="Hình Thức Mua"
-            prepend-inner-icon="mdi-cart"
-          />
-          <v-autocomplete
-            v-model="draft.userId"
-            :items="userOptions"
-            label="Tài Khoản Mua"
-            background-color="grey lighten-4"
-            prepend-inner-icon="mdi-account"
-            :rules="[rules.required]"
-          />
+        <v-col cols="12" md="4" class="pa-2" v-show="currentUser.admin">
+          <v-menu
+            v-model="orderDatePicker"
+            :close-on-content-click="true"
+            :nudge-right="40"
+            transition="scale-transition"
+            offset-y
+            min-width="auto"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="draft.orderDate"
+                label="Order Date"
+                prepend-inner-icon="mdi-calendar"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
+            </template>
+            <v-date-picker
+              class="ma-0 pa-0"
+              v-model="draft.orderDate"
+              @input="orderDatePicker = false"
+            ></v-date-picker>
+          </v-menu>
+          <v-row class="ma-0 pa-0" justify="space-between">
+            <v-autocomplete
+              v-model="draft.method"
+              :items="methodOptions"
+              label="Hình Thức Mua"
+              prepend-inner-icon="mdi-cart"
+            />
+            <v-autocomplete
+              v-model="draft.userId"
+              :items="userOptions"
+              label="Tài Khoản Mua"
+              background-color="grey lighten-4"
+              prepend-inner-icon="mdi-account"
+              :rules="[rules.required]"
+            />
+          </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.transfered"
@@ -224,7 +239,11 @@
               label="Đã Chuyển Khoản"
               prepend-inner-icon="mdi-currency-usd"
             />
-            <v-switch v-model="fullyTransfered" label="Toàn Bộ?"></v-switch>
+            <v-switch
+              v-model="fullyTransfered"
+              label="Toàn Bộ?"
+              flat
+            ></v-switch>
           </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
@@ -302,6 +321,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import moment from "moment";
+import extractDomain from "extract-domain";
 import computedOrder from "@/models/computedOrder";
 import rules from "@/utils/formRules";
 import newOrder from "@/models/NewOrder";
@@ -346,7 +366,10 @@ export default {
   computed: {
     exchangeValue() {
       return this.exchangeRates[this.draft.country - 1]?.rate || 0;
-    }
+    },
+    ...mapState({
+      currentUser: state => state.login.currentUser
+    })
   },
   async created() {
     const userData = await this.fetchOrderCol({
@@ -370,6 +393,7 @@ export default {
     compute() {
       const computedData = new computedOrder({
         ...this.draft,
+        userId: this.draft.userId || this.currentUser.id,
         useTax: this.useTax,
         rate: this.exchangeValue,
         fullyTransfered: this.fullyTransfered,
@@ -398,19 +422,22 @@ export default {
         this.commissionType = "1";
       } else {
         this.commissionType = "2";
-        console.log(val.chargeValue);
       }
     },
     "draft.country": function(val) {
-      if (val === 2) return (this.draft.weightRate = 9.0);
-      return (this.draft.weightRate = 11.0);
+      if (val === 2) this.draft.weightRate = 9.0;
+      else this.draft.weightRate = 11.0;
+      if (val === 1) this.draft.tax = 10;
+      else this.draft.tax = 0;
     },
-    // commissionType: function(val) {
-    //   if (val === "1") return (this.commission = 5);
-    //   return (this.commission = 30000);
-    // },
+    "draft.link": function(val) {
+      this.draft.site = extractDomain(val) || "";
+    },
     arrivalDate(val) {
       this.draft.arrivalDate = val;
+    },
+    currentUser(val) {
+      draft.userId = val.id;
     }
   }
 };

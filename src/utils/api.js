@@ -19,10 +19,25 @@ export default {
   fetchTransfers: payload =>
     request.get("/apis/transfer", { params: { ...payload } }),
   fetchTransferCol: payload =>
-    request.get("/apis/transfer-col", { params: { ...payload } }),
+    request.post("/apis/transfer-col", { ...payload }),
   updateTransferStatus: payload => request.put("/apis/transfer-col", { ...payload }),
   deleteTransfer: payload =>
     request.delete("/apis/transfer", { data: { ...payload } }),
   createTransfer: payload => request.post("/apis/transfer", { ...payload }),
-  updateTransfer: payload => request.put("/apis/transfer", { ...payload })
+  updateTransfer: payload => request.put("/apis/transfer", { ...payload }),
+
+  /** USER API */
+  getUser: (id) => request.get(`/apis/user/${id}`),
+  
+  fetchUsers: payload =>
+    request.get("/apis/user", { params: { ...payload } }),
+  fetchUserCol: payload =>
+    request.get("/apis/user-col", { params: { ...payload } }),
+  updateUserStatus: payload => request.put("/apis/user-col", { ...payload }),
+  deleteUser: payload =>
+    request.delete("/apis/user", { data: { ...payload } }),
+  createUser: payload => request.post("/apis/user", { ...payload }),
+  updateUser: payload => request.put("/apis/user", { ...payload }),
+
+  getStats: payload => request.post("/apis/stats", { ...payload }),
 };
