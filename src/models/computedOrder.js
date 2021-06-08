@@ -1,7 +1,7 @@
 import extractDomain from "extract-domain";
 class Order {
   constructor(data) {
-    this.site = extractDomain(data.link) || "";
+    this.site = extractDomain(data.link) || data.link;
     this.rate = parseInt(data.rate);
     this.arrivalDate = data.arrivalDate || "Updating";
     this.brand = data.brand;

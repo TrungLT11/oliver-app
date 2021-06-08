@@ -1,6 +1,7 @@
 import api from "@/utils/api";
 import Order from "@/models/order";
 import newOrder from "@/models/NewOrder";
+import { last } from "lodash";
 export default {
   state: () => ({
     orders: [],
@@ -14,6 +15,8 @@ export default {
     fetching: false,
     editingOrder: newOrder(),
     editDialog: false,
+    cloningOrder: newOrder(),
+    cloneDialog: false,
     multiSelected: []
   }),
 
@@ -28,7 +31,11 @@ export default {
       if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
       if (filterUser != -1) payload[`orders.UserId`] = filterUser;
       return payload;
-    }
+    },
+    selectedOrders: state =>
+      state.orders.filter(s => state.multiSelected.includes(s.orderId)),
+    selectedOrdersUserId: state =>
+      state.orders.find(s => last(state.multiSelected) === s.orderId)?.user.id
   },
 
   actions: {
@@ -49,7 +56,11 @@ export default {
       state.fetching = false;
     },
     async fetchOrderCol({ state }, { table, colName, orderBy }) {
-      const { data = [] } = await api.fetchOrderCol({ table, colName, orderBy });
+      const { data = [] } = await api.fetchOrderCol({
+        table,
+        colName,
+        orderBy
+      });
       return data;
     },
     async updateStatus({ state, dispatch }, { status, id }) {
@@ -108,6 +119,12 @@ export default {
     },
     setEditDialog({ state }, value) {
       state.editDialog = value;
+    },
+    setCloningOrder({ state }, value) {
+      state.cloningOrder = value;
+    },
+    setCloneDialog({ state }, value) {
+      state.cloneDialog = value;
     },
     setMultiSelected({ state }, value) {
       state.multiSelected = value;

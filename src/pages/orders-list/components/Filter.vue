@@ -84,12 +84,15 @@
         ></v-select>
       </v-col>
     </v-row>
+    <CreateDialog :userOptions="userOptions" :isOrder="true" />
   </v-container>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import CreateDialog from "@/pages/transfer-list/components/CreateDialog";
 export default {
+  components: { CreateDialog },
   data: () => ({
     rowOptions: [10, 20, 30, 40, 50],
     siteOptions: [],

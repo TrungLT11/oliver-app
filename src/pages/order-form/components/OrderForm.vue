@@ -60,8 +60,8 @@
               background-color="grey lighten-4"
               prepend-inner-icon="mdi-counter"
               :rules="[rules.required]"
-            />
-          </v-row><v-row class="ma-0 pa-0" justify="space-between">
+            /> </v-row
+          ><v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.price"
               label="Giá"
@@ -222,6 +222,8 @@
               label="Hình Thức Mua"
               prepend-inner-icon="mdi-cart"
             />
+          </v-row>
+          <v-row class="ma-0 pa-0" justify="space-between">
             <v-autocomplete
               v-model="draft.userId"
               :items="userOptions"
@@ -321,6 +323,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 import moment from "moment";
+import { round } from "lodash";
 import extractDomain from "extract-domain";
 import computedOrder from "@/models/computedOrder";
 import rules from "@/utils/formRules";
@@ -332,8 +335,8 @@ export default {
     dialog: true,
     rules,
     draft: newOrder(),
-    commissionType: "1",
-    commission: 5,
+    commissionType: "2",
+    commission: 50000,
     orderDatePicker: false,
     arrivalDatePicker: false,
     arrivalDate: moment().format("YYYY-MM-DD"),
@@ -414,8 +417,8 @@ export default {
       this.draft = {
         ...val,
         totalCommission: "",
-        totalin: val.inM ? val.totalin : "",
-        total: val.outM ? val.total : ""
+        totalin: val.inM ? round(val.totalin * val.rate, -3) : "",
+        total: val.outM ? round(val.total * val.rate, -3) : ""
       };
       this.commission = val.chargeRawValue;
       if (!val.chargeMoney) {
@@ -431,7 +434,7 @@ export default {
       else this.draft.tax = 0;
     },
     "draft.link": function(val) {
-      this.draft.site = extractDomain(val) || "";
+      this.draft.site = extractDomain(val) || val;
     },
     arrivalDate(val) {
       this.draft.arrivalDate = val;

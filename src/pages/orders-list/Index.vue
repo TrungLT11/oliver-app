@@ -4,12 +4,13 @@
       <Filters />
     </v-app-bar>
     <v-container fluid>
-      <ActionMenu v-if="currentUser.admin"/>
+      <ActionMenu v-if="currentUser.admin" />
       <div v-for="order in orders" :key="order.orderId">
         <Order :order="order" />
       </div>
       <Pagination />
       <EditOrderDialog />
+      <CloneOrderDialog />
       <v-overlay :value="fetching" opacity=".75">
         <v-progress-circular
           indeterminate
@@ -31,7 +32,8 @@ export default {
     Filters: () => import("./components/Filter"),
     Pagination: () => import("./components/Pagination"),
     ActionMenu: () => import("./components/ActionMenu"),
-    EditOrderDialog: () => import("@/pages/order-form/EditOrder")
+    EditOrderDialog: () => import("@/pages/order-form/EditOrder"),
+    CloneOrderDialog: () => import("@/pages/order-form/CloneOrder")
   },
   data() {
     return {
@@ -50,7 +52,13 @@ export default {
     this.fetchOrders();
   },
   methods: {
-    ...mapActions("order", ["fetchOrders", "setEditingOrder", "setEditDialog"])
+    ...mapActions("order", [
+      "fetchOrders",
+      "setEditingOrder",
+      "setEditDialog",
+      "setCloningOrder",
+      "setCloneDialog"
+    ])
   }
 };
 </script>

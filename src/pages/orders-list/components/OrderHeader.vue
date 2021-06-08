@@ -33,6 +33,7 @@
         v-text="order.arrivalDate"
       ></v-btn>
       <v-spacer></v-spacer>
+      <debt-dropdown :order="order" />
       <v-menu top rounded="pill" offset-y nudge-top="5">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
@@ -106,7 +107,6 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <debt-dropdown :order="order" />
       <v-btn
         v-if="canEditForUser"
         class="mr-1"
@@ -117,6 +117,17 @@
         @click="openEditDialog"
       >
         <v-icon small>mdi-pencil</v-icon>
+      </v-btn>
+      <v-btn
+        v-if="canEditForUser"
+        class="mr-1"
+        dark
+        small
+        depressed
+        color="grey darken-3"
+        @click="openCloneDialog"
+      >
+        <v-icon small>mdi-content-copy</v-icon>
       </v-btn>
       <v-btn
         v-if="canDelete || !order.status"
@@ -173,6 +184,10 @@ export default {
       this.setEditingOrder(this.order);
       this.setEditDialog(true);
     },
+    openCloneDialog() {
+      this.setCloningOrder(this.order);
+      this.setCloneDialog(true);
+    },
     deleteOrderClick() {
       if (window.confirm("Confirm?")) this.deleteOrder(this.order.orderId);
     },
@@ -188,6 +203,8 @@ export default {
       "deleteOrder",
       "setEditingOrder",
       "setEditDialog",
+      "setCloningOrder",
+      "setCloneDialog",
       "setMultiSelected"
     ])
   }

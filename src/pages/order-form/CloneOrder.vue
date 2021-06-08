@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :value="editDialog"
+    :value="cloneDialog"
     fullscreen
     hide-overlay
     persistent
@@ -12,10 +12,10 @@
         <v-btn icon dark @click="cancel">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Sửa Đơn hàng</v-toolbar-title>
+        <v-toolbar-title>Tạo Đơn hàng</v-toolbar-title>
       </v-toolbar>
       <v-container class="ma-0 pa-3" fluid>
-        <order-form :order="editingOrder" @submit="update" @cancel="cancel" />
+        <order-form :order="cloningOrder" @submit="create" @cancel="cancel" />
       </v-container>
     </v-card>
   </v-dialog>
@@ -30,29 +30,29 @@ export default {
   components: { OrderForm },
   computed: {
     ...mapState({
-      editingOrder: state => state.order.editingOrder,
-      editDialog: state => state.order.editDialog
+      cloningOrder: state => state.order.cloningOrder,
+      cloneDialog: state => state.order.cloneDialog
     })
   },
   methods: {
-    async update({ id, order }) {
-      await this.updateOrder({ id, order });
+    async create({ order }) {
+      await this.createOrder(order);
       this.fetchOrders();
       this.cancel();
     },
     cancel() {
-      this.setEditDialog(false);
+      this.setCloneDialog(false);
     },
     ...mapActions("order", [
       "fetchOrders",
-      "setEditDialog",
-      "setEditingOrder",
-      "updateOrder"
+      "setCloneDialog",
+      "setCloningOrder",
+      "createOrder"
     ])
   },
   watch: {
-    editDialog(val) {
-      if (!val) this.setEditingOrder(newOrder());
+    cloneDialog(val) {
+      if (!val) this.setCloningOrder(newOrder());
     }
   }
 };

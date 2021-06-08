@@ -1,9 +1,9 @@
 <template>
   <v-container class="ma-0 pa-2" fluid>
-    <v-toolbar dark color="primary">
+    <v-toolbar dark color="primary" height="48">
       <v-toolbar-title>Đơn Hàng Mới</v-toolbar-title>
     </v-toolbar>
-    <order-form @submit="create" v-if="render" />
+    <order-form v-if="render" @submit="create" @cancel="cancel" />
   </v-container>
 </template>
 
@@ -16,6 +16,9 @@ export default {
     render: true
   }),
   methods: {
+    cancel() {
+      this.$router.push("/")
+    },
     async create({ order }) {
       try {
         await this.createOrder(order);

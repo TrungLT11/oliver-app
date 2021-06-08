@@ -1,4 +1,5 @@
 import moment from "moment";
+import { round } from "lodash";
 class Order {
   constructor(data) {
     this.arrivalDate = data.ArrivalDate;
@@ -38,6 +39,7 @@ class Order {
     this.weightRate = data.WeightRate;
     // USER INFO
     this.user = {
+      id: data.id,
       username: data.user,
       email: data.email,
       fullname: data.fullname,
@@ -126,13 +128,13 @@ class Order {
 
   get chargeValue() {
     if (this.chargePercent == 0)
-      return numberWithCommas(Math.round(this.chargeMoney * this.rate));
+      return numberWithCommas(roundToThousandth(this.chargeMoney * this.rate));
     else return 100 * this.chargePercent + "%";
   }
 
   get chargeRawValue() {
     if (this.chargePercent == 0)
-      return Math.round(this.chargeMoney * this.rate);
+      return roundToThousandth(this.chargeMoney * this.rate);
     else return 100 * this.chargePercent;
   }
 
@@ -141,31 +143,33 @@ class Order {
   }
 
   get shippingValue() {
-    return numberWithCommas(Math.round(this.shippingCharge * this.rate));
+    return numberWithCommas(roundToThousandth(this.shippingCharge * this.rate));
   }
 
   get totalInValue() {
-    return numberWithCommas(Math.round(this.totalin * this.rate));
+    return numberWithCommas(roundToThousandth(this.totalin * this.rate));
   }
 
   get totalOutValue() {
-    return numberWithCommas(Math.round(this.total * this.rate));
+    return numberWithCommas(roundToThousandth(this.total * this.rate));
   }
 
   get totalValue() {
     return numberWithCommas(
-      Math.round((this.total + this.shippingCharge) * this.rate)
+      roundToThousandth((this.total + this.shippingCharge) * this.rate)
     );
   }
 
   get totalCommissionValue() {
-    return numberWithCommas(Math.round(this.totalCommission * this.rate));
+    return numberWithCommas(
+      roundToThousandth(this.totalCommission * this.rate)
+    );
   }
 }
 const numberWithCommas = x =>
   x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
-const roundToThousandth = x => Math.ceil(x * 1000) / 1000;
+const roundToThousandth = x => round(x, -3);
 
 const getHostnameFromRegex = url => {
   const matches = url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);

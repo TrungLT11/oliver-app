@@ -19,6 +19,16 @@
     <v-btn fab dark small color="blue" @click="selectAll(true)">
       <v-icon> mdi-checkbox-multiple-marked-outline</v-icon>
     </v-btn>
+    <v-btn
+      v-show="anySelected"
+      fab
+      dark
+      small
+      color="primary"
+      @click="setCreateDialog(true)"
+    >
+      <v-icon> mdi-plus-circle</v-icon>
+    </v-btn>
     <!-- <v-btn v-show="anySelected" fab dark small color="red">
       <v-icon>mdi-file-download-outline</v-icon>
     </v-btn> -->
@@ -115,7 +125,8 @@ export default {
       const newSelected = val ? this.orders.map(_o => _o.orderId) : [];
       this.setMultiSelected(newSelected);
     },
-    ...mapActions("order", ["setMultiSelected", "changeMultiStatus"])
+    ...mapActions("order", ["setMultiSelected", "changeMultiStatus"]),
+    ...mapActions("transfer", ["setCreateDialog"])
   },
   watch: {
     orders() {

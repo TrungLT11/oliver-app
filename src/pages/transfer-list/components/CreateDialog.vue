@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="createDialog" width="450" origin="bottom right" persistent>
+  <v-dialog :value="createDialog" width="600" origin="bottom right" persistent>
     <v-form ref="form" @submit.prevent="submit">
       <v-card>
         <v-toolbar dark color="primary">
@@ -98,6 +98,16 @@
               </span>
             </template>
           </v-autocomplete>
+          <v-row justify="space-between">
+            <v-col>
+              <OrderThumbnail
+                v-for="order in selectedOrders"
+                :key="order.orderId"
+                :order="order"
+                @remove="removeSelected"
+              />
+            </v-col>
+          </v-row>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -114,8 +124,10 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
+import OrderThumbnail from "./OrderThumbnail";
 import rules from "@/utils/formRules";
+import { sumBy } from "lodash";
 import moment from "moment";
 const defaultTransferData = {
   transferDate: moment().format("YYYY-MM-DD"),
@@ -128,7 +140,8 @@ const defaultTransferData = {
   rate: 0
 };
 export default {
-  props: ["userOptions"],
+  components: { OrderThumbnail },
+  props: ["userOptions", "isOrder"],
   data: () => ({
     rules,
     transfer: defaultTransferData,
@@ -151,8 +164,10 @@ export default {
   computed: {
     ...mapState({
       user: state => state.login.currentUser,
-      createDialog: state => state.transfer.createDialog
-    })
+      createDialog: state => state.transfer.createDialog,
+      multiSelected: state => state.order.multiSelected
+    }),
+    ...mapGetters("order", ["selectedOrders", "selectedOrdersUserId"])
   },
   async created() {
     const exchangeData = await this.fetchExchange();
@@ -179,18 +194,33 @@ export default {
       // this.$refs.form.reset();
       this.setCreateDialog(false);
     },
+    removeSelected(id) {
+      const newSelected = this.selectedOrders
+        .map(o => o.orderId)
+        .filter(_id => _id != id);
+      this.setMultiSelected(newSelected);
+    },
     ...mapActions("exchange", ["fetchExchange"]),
     ...mapActions("transfer", [
       "setCreateDialog",
       "createTransfer",
       "fetchTransfers"
-    ])
+    ]),
+    ...mapActions("order", ["setMultiSelected"])
   },
   watch: {
     createDialog(val) {
       if (val) {
         this.transfer = { ...defaultTransferData };
         this.transfer.userId = this.user.id;
+        if (this.isOrder) {
+          this.transfer.amount = sumBy(
+            this.selectedOrders,
+            order => Math.round((order.total + order.shippingCharge) * order.rate)
+          );
+          if (this.selectedOrdersUserId)
+            this.transfer.userId = this.selectedOrdersUserId;
+        }
       }
     },
     "transfer.currency"(val) {

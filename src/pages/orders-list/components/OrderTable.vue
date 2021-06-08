@@ -39,10 +39,10 @@
           <th>
             Bán Ra
           </th>
-          <th>
+          <th v-if="user.admin === 1">
             Tổng
           </th>
-          <th v-if="user.admin">
+          <th v-if="user.admin === 1">
             Công Mua
           </th>
           <th v-if="user.admin">
@@ -89,8 +89,8 @@
           <td>{{ order.shippingValue }}</td>
           <td v-if="user.admin">{{ order.totalInValue }}</td>
           <td>{{ order.totalOutValue }}</td>
-          <td>{{ order.totalValue }}</td>
-          <td v-if="user.admin">{{ order.totalCommissionValue }}</td>
+          <td v-if="user.admin === 1">{{ order.totalValue }}</td>
+          <td v-if="user.admin === 1">{{ order.totalCommissionValue }}</td>
           <td v-if="user.admin">{{ order.note }}</td>
         </tr>
       </tbody>
@@ -106,7 +106,7 @@ export default {
     ...mapState({
       user: state => state.login.currentUser
     })
-  },
+  }
 };
 </script>
 
