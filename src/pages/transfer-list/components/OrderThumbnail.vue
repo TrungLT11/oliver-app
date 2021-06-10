@@ -37,8 +37,8 @@
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn icon @click="menu = false">
-              <v-icon>mdi-close-circle</v-icon>
+            <v-btn icon :href="order.link" target="_blank">
+              <v-icon>mdi-web</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -49,6 +49,18 @@
             <v-icon>mdi-calendar-check</v-icon>
           </v-list-item-action>
           <v-list-item-subtitle>{{ order.arrivalDate }}</v-list-item-subtitle>
+        </v-list-item>
+        <v-list-item v-if="order.note&&order.note!='None'">
+          <v-list-item-action>
+            <v-icon>mdi-note</v-icon>
+          </v-list-item-action>
+          <v-list-item-subtitle>{{ order.note }}</v-list-item-subtitle>
+        </v-list-item>
+        <v-list-item>
+          <v-list-item-action>
+            <v-icon>mdi-cash</v-icon>
+          </v-list-item-action>
+          <v-list-item-subtitle>{{ order.totalValue }}</v-list-item-subtitle>
         </v-list-item>
       </v-list>
     </v-card>

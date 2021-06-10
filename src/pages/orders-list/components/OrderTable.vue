@@ -33,13 +33,13 @@
           <th>
             Phí VC
           </th>
-          <th v-if="user.admin">
+          <th v-if="user.admin===1">
             Mua Vào
           </th>
           <th>
             Bán Ra
           </th>
-          <th v-if="user.admin === 1">
+          <th>
             Tổng
           </th>
           <th v-if="user.admin === 1">
@@ -85,11 +85,11 @@
           </td>
           <td>{{ order.shipWeb }}</td>
           <td>{{ order.surCharge }}</td>
-          <td>{{ `${order.weight} (${order.weightRate})` }}</td>
+          <td>{{ `${order.weight}kg (${order.weightRate})` }}</td>
           <td>{{ order.shippingValue }}</td>
-          <td v-if="user.admin">{{ order.totalInValue }}</td>
+          <td v-if="user.admin===1">{{ order.totalInValue }}</td>
           <td>{{ order.totalOutValue }}</td>
-          <td v-if="user.admin === 1">{{ order.totalValue }}</td>
+          <td>{{ order.totalValue }}</td>
           <td v-if="user.admin === 1">{{ order.totalCommissionValue }}</td>
           <td v-if="user.admin">{{ order.note }}</td>
         </tr>

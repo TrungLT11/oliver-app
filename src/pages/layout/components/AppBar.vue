@@ -1,16 +1,25 @@
 <template>
-  <v-app-bar flat floating absolute app dense>
-    <v-app-bar-nav-icon @click="setDrawer(!drawer)" small></v-app-bar-nav-icon>
+  <v-app-bar flat absolute app dense>
+    <v-btn @click="setDrawer(!drawer)" small outlined class="mx-3" color="grey darken-1">
+      <v-icon>
+        mdi-menu
+      </v-icon>
+    </v-btn>
+    <v-btn v-tooltip="'Làm mới'" @click="$emit('reload')" small outlined color="grey darken-1">
+      <v-icon>
+        mdi-refresh
+      </v-icon>
+    </v-btn>
     <!-- <v-btn icon text small @click="setDrawer(!drawer)">
       <v-icon>
         mdi-view-quilt
       </v-icon>
     </v-btn> -->
 
-    <v-toolbar-title
+    <!-- <v-toolbar-title
       class="hidden-sm-and-down font-weight-light body-2"
       v-text="$route.name"
-    />
+    /> -->
 
     <v-spacer />
 

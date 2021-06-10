@@ -3,12 +3,12 @@
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
-          <v-card class="elevation-12">
-            <v-toolbar dark color="primary">
-              <v-toolbar-title>Đăng Nhập</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-              <v-form v-model="valid">
+          <v-form v-model="valid" @submit.prevent="submit">
+            <v-card class="elevation-12">
+              <v-toolbar dark color="primary">
+                <v-toolbar-title>Đăng Nhập</v-toolbar-title>
+              </v-toolbar>
+              <v-card-text>
                 <v-text-field
                   v-model="username"
                   prepend-icon="mdi-account"
@@ -21,20 +21,21 @@
                   v-model="password"
                   id="password"
                   prepend-icon="mdi-lock"
+                  :append-icon="passwordIcon"
                   name="password"
                   label="Mật Khẩu"
-                  type="password"
+                  :type="passwordType"
                   :rules="[rules.required]"
+                  @click:append="triggerPassword"
                 ></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" @click="submit" :loading="loading"
-                >Đăng Nhập</v-btn
-              >
-            </v-card-actions>
-          </v-card>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn block color="primary" type="submit" :loading="loading">
+                  Đăng Nhập
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-form>
         </v-flex>
       </v-layout>
     </v-container>
@@ -53,13 +54,23 @@ const login = async payload => {
 };
 
 export default {
+  name: "Login",
   data: () => ({
     valid: false,
+    showPassword: false,
     username: "",
     password: "",
     rules: rules,
     loading: false
   }),
+  computed: {
+    passwordType() {
+      return this.showPassword ? "text" : "password";
+    },
+    passwordIcon() {
+      return this.showPassword ? "mdi-eye-off-outline" : "mdi-eye-outline";
+    }
+  },
   methods: {
     async submit() {
       if (!this.valid) return false;
@@ -72,7 +83,7 @@ export default {
         const {
           data: { data: user, token }
         } = await login(payload);
-        const redirectPath = this.$route.query.redirect || "/";
+        const redirectPath = this.$route.query.redirect || "/order";
         localStorage.setItem("user", JSON.stringify(user));
         localStorage.setItem("token", token);
         this.setCurrentUser(user);
@@ -82,6 +93,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    triggerPassword() {
+      this.showPassword = !this.showPassword;
     },
     ...mapActions("login", ["setCurrentUser"])
   }

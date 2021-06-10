@@ -82,23 +82,45 @@
             prepend-inner-icon="mdi-account-outline"
           >
           </v-autocomplete>
-          <v-autocomplete
-            v-if="user.admin"
-            v-model="transfer.type"
-            :items="typeOptions"
-            label="Loại"
-            prepend-inner-icon="mdi-cog-transfer-outline"
-          >
-            <template slot="item" slot-scope="{ item }">
-              <span>
-                <v-icon :size="12" :color="item.color" class="mr-1">
-                  mdi-checkbox-blank-circle
-                </v-icon>
-                <span>{{ item.text }}</span>
-              </span>
-            </template>
-          </v-autocomplete>
-          <v-row justify="space-between">
+          <v-row>
+            <v-col>
+              <v-autocomplete
+                v-if="user.admin"
+                v-model="transfer.type"
+                :items="typeOptions"
+                label="Loại"
+                prepend-inner-icon="mdi-cog-transfer-outline"
+              >
+                <template slot="item" slot-scope="{ item }">
+                  <span>
+                    <v-icon :size="12" :color="item.color" class="mr-1">
+                      mdi-checkbox-blank-circle
+                    </v-icon>
+                    <span>{{ item.text }}</span>
+                  </span>
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col>
+              <v-autocomplete
+                v-if="user.admin"
+                v-model="transfer.status"
+                :items="statusOptions"
+                label="Trạng thái"
+                prepend-inner-icon="mdi-cog-transfer-outline"
+              >
+                <template slot="item" slot-scope="{ item }">
+                  <span>
+                    <v-icon :size="12" :color="item.color" class="mr-1">
+                      mdi-checkbox-blank-circle
+                    </v-icon>
+                    <span>{{ item.text }}</span>
+                  </span>
+                </template>
+              </v-autocomplete>
+            </v-col>
+          </v-row>
+          <v-row v-if="isOrder" justify="space-between">
             <v-col>
               <OrderThumbnail
                 v-for="order in selectedOrders"
@@ -127,7 +149,7 @@
 import { mapActions, mapGetters, mapState } from "vuex";
 import OrderThumbnail from "./OrderThumbnail";
 import rules from "@/utils/formRules";
-import { sumBy } from "lodash";
+import { sumBy, round } from "lodash";
 import moment from "moment";
 const defaultTransferData = {
   transferDate: moment().format("YYYY-MM-DD"),
@@ -137,7 +159,8 @@ const defaultTransferData = {
   currency: 0,
   userId: null,
   type: 4,
-  rate: 0
+  rate: 0,
+  status: 0
 };
 export default {
   components: { OrderThumbnail },
@@ -147,11 +170,17 @@ export default {
     transfer: defaultTransferData,
     exchangeRates: [],
     transferDatePicker: false,
+    orderStatusMap: [0, 5, 2],
     typeOptions: [
       { text: "TDCK", value: 1, color: "green" },
       { text: "COD-HN", value: 2, color: "blue" },
       { text: "COD-TINH", value: 3, color: "yellow" },
       { text: "OTHER", value: 4, color: "red" }
+    ],
+    statusOptions: [
+      { text: "Chưa nhận", value: 0, color: "grey" },
+      { text: "Đã nhận", value: 1, color: "green" },
+      { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     countryOptions: [
       { text: "VND", value: 0, color: "black" },
@@ -179,15 +208,21 @@ export default {
       const vnd = this.transfer.currency
         ? this.transfer.amount * this.transfer.rate
         : this.transfer.amount;
+      const orders = this.isOrder ? this.multiSelected.join(",") : "";
       const transferData = {
         ...this.transfer,
-        vnd
+        vnd,
+        orders
       };
+      this.selectedOrders.map(({ orderId }) => {
+        const orderStatus = this.orderStatusMap[this.transfer.status];
+        if (orderStatus)
+          this.updateStatus({ id: orderId, status: orderStatus });
+      });
       this.create(transferData);
     },
     async create(transfer) {
       await this.createTransfer(transfer);
-      await this.fetchTransfers();
       this.cancel();
     },
     cancel() {
@@ -206,7 +241,7 @@ export default {
       "createTransfer",
       "fetchTransfers"
     ]),
-    ...mapActions("order", ["setMultiSelected"])
+    ...mapActions("order", ["setMultiSelected", "updateStatus"])
   },
   watch: {
     createDialog(val) {
@@ -214,9 +249,8 @@ export default {
         this.transfer = { ...defaultTransferData };
         this.transfer.userId = this.user.id;
         if (this.isOrder) {
-          this.transfer.amount = sumBy(
-            this.selectedOrders,
-            order => Math.round((order.total + order.shippingCharge) * order.rate)
+          this.transfer.amount = sumBy(this.selectedOrders, order =>
+            round((order.total + order.shippingCharge) * order.rate, -3)
           );
           if (this.selectedOrdersUserId)
             this.transfer.userId = this.selectedOrdersUserId;

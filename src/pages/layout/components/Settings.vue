@@ -1,6 +1,6 @@
 <template>
   <div id="settings-wrapper">
-    <v-btn id="logout" class="ma-2" min-width="0" icon large @click="logout()">
+    <v-btn v-tooltip="'Đăng xuất'" id="logout" class="ma-2" min-width="0" icon large @click="logout()">
       <v-icon>mdi-logout</v-icon>
     </v-btn>
     <v-btn id="settings" class="ma-2" min-width="0" icon large>
@@ -20,7 +20,7 @@
     >
       <v-card class="text-center mb-0" width="300">
         <v-card-text>
-          <strong class="mb-3 d-inline-block">SIDEBAR FILTERS</strong>
+          <strong class="mb-3 d-inline-block">Màu sắc chính</strong>
 
           <v-item-group v-model="color">
             <v-item v-for="color in colors" :key="color" :value="color">
@@ -40,7 +40,7 @@
 
           <v-row align="center" no-gutters>
             <v-col cols="auto">
-              Dark Mode
+              Chế độ tối
             </v-col>
 
             <v-spacer />

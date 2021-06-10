@@ -1,11 +1,12 @@
 <template>
   <v-main>
-    <router-view />
+    <router-view v-if="render"/>
   </v-main>
 </template>
 
 <script>
   export default {
-    name: 'DashboardCoreView'
+    name: 'DashboardCoreView',
+    props: ["render"]
   }
 </script>

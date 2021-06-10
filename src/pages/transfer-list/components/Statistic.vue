@@ -1,6 +1,6 @@
 <template>
   <v-row align="center">
-    <v-col>
+    <v-col sm="12" md="4">
       <base-material-stats-card
         color="blue darken-4"
         icon="mdi-bank-transfer-in"
@@ -8,7 +8,7 @@
         subText="Tổng tiền chuyển khoản"
       ></base-material-stats-card>
     </v-col>
-    <v-col>
+    <v-col sm="12" md="4">
       <base-material-stats-card
         color="yellow darken-4"
         icon="mdi-bank-transfer-out"
@@ -16,7 +16,7 @@
         subText="Tổng tiền hàng"
       ></base-material-stats-card>
     </v-col>
-    <v-col>
+    <v-col sm="12" md="4">
       <base-material-stats-card
         :color="balanceColor"
         icon="mdi-bank-transfer"

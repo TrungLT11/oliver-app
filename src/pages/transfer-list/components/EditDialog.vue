@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="editDialog" width="450" origin="bottom right" persistent>
+  <v-dialog :value="editDialog" width="600" origin="bottom right" persistent>
     <v-form ref="form" @submit.prevent="submit">
       <v-card>
         <v-toolbar dark color="primary">
@@ -84,22 +84,44 @@
             prepend-inner-icon="mdi-account-outline"
           >
           </v-autocomplete>
-          <v-autocomplete
-            v-if="user.admin"
-            v-model="transfer.type"
-            :items="typeOptions"
-            label="Loại"
-            prepend-inner-icon="mdi-cog-transfer-outline"
-          >
-            <template slot="item" slot-scope="{ item }">
-              <span>
-                <v-icon :size="12" :color="item.color" class="mr-1">
-                  mdi-checkbox-blank-circle
-                </v-icon>
-                <span>{{ item.text }}</span>
-              </span>
-            </template>
-          </v-autocomplete>
+          <v-row>
+            <v-col>
+              <v-autocomplete
+                v-if="user.admin"
+                v-model="transfer.type"
+                :items="typeOptions"
+                label="Loại"
+                prepend-inner-icon="mdi-cog-transfer-outline"
+              >
+                <template slot="item" slot-scope="{ item }">
+                  <span>
+                    <v-icon :size="12" :color="item.color" class="mr-1">
+                      mdi-checkbox-blank-circle
+                    </v-icon>
+                    <span>{{ item.text }}</span>
+                  </span>
+                </template>
+              </v-autocomplete>
+            </v-col>
+            <v-col>
+              <v-autocomplete
+                v-if="user.admin"
+                v-model="transfer.status"
+                :items="statusOptions"
+                label="Trạng thái"
+                prepend-inner-icon="mdi-cog-transfer-outline"
+              >
+                <template slot="item" slot-scope="{ item }">
+                  <span>
+                    <v-icon :size="12" :color="item.color" class="mr-1">
+                      mdi-checkbox-blank-circle
+                    </v-icon>
+                    <span>{{ item.text }}</span>
+                  </span>
+                </template>
+              </v-autocomplete>
+            </v-col>
+          </v-row>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -132,8 +154,10 @@ export default {
       currency: 0,
       userId: null,
       type: 4,
-      rate: 0
+      rate: 0,
+      status: 0
     },
+    orderStatusMap: [0, 5, 2],
     exchangeRates: [],
     transferDatePicker: false,
     typeOptions: [
@@ -141,6 +165,11 @@ export default {
       { text: "COD-HN", value: 2, color: "blue" },
       { text: "COD-TINH", value: 3, color: "yellow" },
       { text: "OTHER", value: 4, color: "red" }
+    ],
+    statusOptions: [
+      { text: "Chưa nhận", value: 0, color: "grey" },
+      { text: "Đã nhận", value: 1, color: "green" },
+      { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     countryOptions: [
       { text: "VND", value: 0, color: "black" },
@@ -170,8 +199,14 @@ export default {
         : this.transfer.amounts;
       const transferData = {
         ...this.transfer,
-        vnd
+        vnd,
+        orders: undefined
       };
+      this.transfer.orders.map(({ orderId }) => {
+        const orderStatus = this.orderStatusMap[this.transfer.status];
+        if (orderStatus)
+          this.updateStatus({ id: orderId, status: orderStatus });
+      });
       this.update({ id: this.transfer.transferId, transfer: transferData });
     },
     update({ id, transfer }) {
@@ -183,7 +218,8 @@ export default {
       this.setEditDialog(false);
     },
     ...mapActions("exchange", ["fetchExchange"]),
-    ...mapActions("transfer", ["setEditDialog", "updateTransfer"])
+    ...mapActions("transfer", ["setEditDialog", "updateTransfer"]),
+    ...mapActions("order", ["updateStatus"])
   },
   watch: {
     editDialog(val) {

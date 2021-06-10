@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <dashboard-core-app-bar />
-    
+    <dashboard-core-app-bar @reload="forceRerender" />
+
     <dashboard-core-drawer />
 
-    <dashboard-core-view />
+    <dashboard-core-view :render="render" />
   </v-app>
 </template>
 
@@ -19,7 +19,20 @@ export default {
   },
 
   data: () => ({
-    expandOnHover: false
-  })
+    expandOnHover: false,
+    render: true
+  }),
+
+  methods: {
+    forceRerender() {
+      this.render = false;
+      this.$router.push({ query: {} });
+      this.$store.dispatch("order/reset");
+      this.$store.dispatch("transfer/reset");
+      this.$nextTick(() => {
+        this.render = true;
+      });
+    }
+  }
 };
 </script>

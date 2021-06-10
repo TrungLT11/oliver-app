@@ -158,7 +158,8 @@
           </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
-              v-model.number="draft.shippingCharge"
+              :value="draft.weight * draft.weightRate"
+              readonly
               label="Phí Ship"
               placeholder="Auto"
               type="number"
@@ -174,7 +175,7 @@
               label="Mua Vào"
               placeholder="Auto"
               background-color="green lighten-5"
-              prepend-inner-icon="mdi-currency-usd"
+              prepend-inner-icon="mdi-cash"
             />
             <!-- <v-checkbox v-model="draft.inVnd" label="VND"></v-checkbox> -->
           </v-row>
@@ -184,7 +185,7 @@
               label="Bán Ra"
               background-color="green lighten-5"
               placeholder="Auto"
-              prepend-inner-icon="mdi-currency-usd"
+              prepend-inner-icon="mdi-cash"
             />
             <!-- <v-checkbox v-model="draft.outVnd" label="VND"></v-checkbox> -->
           </v-row>
@@ -330,7 +331,7 @@ import rules from "@/utils/formRules";
 import newOrder from "@/models/NewOrder";
 
 export default {
-  props: ["order"],
+  props: ["order", "isCreate"],
   data: () => ({
     dialog: true,
     rules,
@@ -343,7 +344,7 @@ export default {
     useTax: true,
     fullyTransfered: false,
     exchangeRates: [],
-
+    unwatch: null,
     userOptions: [],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
@@ -414,6 +415,7 @@ export default {
   },
   watch: {
     order: function(val) {
+      if (this.unwatch) this.unwatch();
       this.draft = {
         ...val,
         totalCommission: "",
@@ -426,6 +428,15 @@ export default {
       } else {
         this.commissionType = "2";
       }
+      this.unwatch = this.$watch("commissionType", val => {
+        if (val === "1") this.commission = 5;
+        else this.commission = 50000;
+      });
+    },
+    commissionType: function(val) {
+      if (this.isCreate)
+        if (val === "1") this.commission = 5;
+        else this.commission = 50000;
     },
     "draft.country": function(val) {
       if (val === 2) this.draft.weightRate = 9.0;

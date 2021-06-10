@@ -1,24 +1,25 @@
 import api from "@/utils/api";
 import Transfer from "@/models/transfer";
+const initState = () => ({
+  transfers: [],
+  filterStatus: -1,
+  filterType: "",
+  filterUser: -1,
+  filterCountry: -1,
+  filterOrder: -1,
+  page: 1,
+  rowsPerPage: 10,
+  sortCol: "TransferId",
+  total: 0,
+  totalTransfer: 0,
+  fetching: false,
+  editingTransfer: null,
+  createDialog: false,
+  editDialog: false,
+  multiSelected: []
+})
 export default {
-  state: () => ({
-    transfers: [],
-    filterStatus: -1,
-    filterType: "",
-    filterUser: -1,
-    filterCountry: -1,
-    filterOrder: -1,
-    page: 1,
-    rowsPerPage: 30,
-    sortCol: "TransferId",
-    total: 0,
-    totalTransfer: 0,
-    fetching: false,
-    editingTransfer: null,
-    createDialog: false,
-    editDialog: false,
-    multiSelected: []
-  }),
+  state: initState(),
 
   mutations: {},
 
@@ -69,6 +70,7 @@ export default {
     },
     async createTransfer({ state, dispatch }, transfer) {
       await api.createTransfer({ transfer });
+      dispatch("fetchTransfers");
       alert("SUCCESS");
     },
     async updateTransfer({ state, dispatch }, { id, transfer }) {
@@ -133,6 +135,9 @@ export default {
     setSortCol({ state, dispatch }, value) {
       state.sortCol = value;
       dispatch("fetchTransfers");
+    },
+    reset({ state }) {
+      Object.assign(state, initState())
     }
   },
   namespaced: true

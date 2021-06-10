@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-6" fluid>
     <v-row align="center">
-      <v-col>
+      <v-col sm="12" md="3">
         <base-material-stats-card
           color="green darken-2"
           icon="mdi-currency-usd"
@@ -18,7 +18,7 @@
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
-      <v-col>
+      <v-col sm="12" md="3">
         <base-material-stats-card
           color="blue darken-2"
           icon="mdi-currency-gbp"
@@ -35,7 +35,7 @@
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
-      <v-col>
+      <v-col sm="12" md="3">
         <base-material-stats-card
           color="orange darken-2"
           icon="mdi-currency-eur"
@@ -52,7 +52,7 @@
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
-      <v-col>
+      <v-col sm="12" md="3">
         <base-material-stats-card
           color="red darken-2"
           icon="mdi-currency-krw"

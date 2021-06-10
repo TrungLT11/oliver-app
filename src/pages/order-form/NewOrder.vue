@@ -3,7 +3,7 @@
     <v-toolbar dark color="primary" height="48">
       <v-toolbar-title>Đơn Hàng Mới</v-toolbar-title>
     </v-toolbar>
-    <order-form v-if="render" @submit="create" @cancel="cancel" />
+    <order-form v-if="render" @submit="create" @cancel="cancel" :isCreate="true" />
   </v-container>
 </template>
 

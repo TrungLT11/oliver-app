@@ -4,6 +4,7 @@
       <v-btn
         v-bind="attrs"
         v-on="on"
+        v-tooltip="'Xem nợ'"
         class="mr-1"
         dark
         small

@@ -49,8 +49,7 @@ class Order {
       this.chargePercent = 0;
     }
 
-    if (!this.shippingCharge)
-      this.shippingCharge = this.weight * this.weightRate;
+    this.shippingCharge = this.weight * this.weightRate;
     if (!this.totalin) {
       this.totalin =
         this.quantity * (1 - this.offVal / 100) * this.price +

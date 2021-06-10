@@ -25,7 +25,7 @@
 import { mapActions, mapState } from "vuex";
 import OrderForm from "./components/OrderForm";
 import newOrder from "@/models/NewOrder";
-// import difference from "@/utils/index";
+import difference from "@/utils/index";
 export default {
   components: { OrderForm },
   computed: {
@@ -36,6 +36,8 @@ export default {
   },
   methods: {
     async update({ id, order }) {
+      // console.log(difference(order, this.editingOrder))
+      // console.log(difference(this.editingOrder,order))
       await this.updateOrder({ id, order });
       this.fetchOrders();
       this.cancel();

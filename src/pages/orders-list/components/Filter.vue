@@ -113,6 +113,7 @@ export default {
     ]
   }),
   async created() {
+    this.setFilterFromRoute();
     const siteData = await this.fetchOrderCol({
       table: "orders",
       colName: "site"
@@ -139,7 +140,37 @@ export default {
       currentUser: state => state.login.currentUser
     })
   },
+  watch: {
+    rowsPerPage(val) {
+      if (this.$route.query.rows != val)
+        this.$router.push({ query: { ...this.$route.query, rows: val } });
+    },
+    filterSite(val) {
+      if (this.$route.query.site != val)
+        this.$router.push({ query: { ...this.$route.query, site: val } });
+    },
+    filterStatus(val) {
+      if (this.$route.query.status != val)
+        this.$router.push({ query: { ...this.$route.query, status: val } });
+    },
+    filterCountry(val) {
+      if (this.$route.query.country != val)
+        this.$router.push({ query: { ...this.$route.query, country: val } });
+    },
+    filterUser(val) {
+      if (this.$route.query.user != val)
+        this.$router.push({ query: { ...this.$route.query, user: val } });
+    }
+  },
   methods: {
+    setFilterFromRoute() {
+      const { rows, site, status, country, user } = this.$route.query;
+      if (rows) this.changeRowsPerPage(Number(rows));
+      if (site) this.changeFilterSite(site);
+      if (status) this.changeFilterStatus(Number(status));
+      if (country) this.changeFilterCountry(Number(country));
+      if (user) this.changeFilterUser(Number(user));
+    },
     ...mapActions("order", [
       "changeRowsPerPage",
       "changeFilterSite",

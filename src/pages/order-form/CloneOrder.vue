@@ -12,7 +12,7 @@
         <v-btn icon dark @click="cancel">
           <v-icon>mdi-close</v-icon>
         </v-btn>
-        <v-toolbar-title>Tạo Đơn hàng</v-toolbar-title>
+        <v-toolbar-title>Tạo Đơn hàng - Clone</v-toolbar-title>
       </v-toolbar>
       <v-container class="ma-0 pa-3" fluid>
         <order-form :order="cloningOrder" @submit="create" @cancel="cancel" />

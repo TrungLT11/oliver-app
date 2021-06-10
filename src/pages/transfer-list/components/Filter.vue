@@ -118,7 +118,7 @@ import EditDialog from "./EditDialog";
 export default {
   components: { CreateDialog, EditDialog },
   data: () => ({
-    rowOptions: [15, 30, 45, 60, 90],
+    rowOptions: [10, 20, 40, 60, 100],
     siteOptions: [],
     userOptions: [],
     sortOptions: [
@@ -127,7 +127,8 @@ export default {
     ],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
-      { text: "Đã nhận", value: 1, color: "primary" }
+      { text: "Đã nhận", value: 1, color: "green" },
+      { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     orderOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
@@ -145,6 +146,7 @@ export default {
     ]
   }),
   async created() {
+    this.setFilterFromRoute();
     const userData = await this.fetchTransferCol({
       table: "members",
       colName: "user, mobile, id"
@@ -156,19 +158,53 @@ export default {
       value: _i.id
     }));
   },
+  watch: {
+    rowsPerPage(val) {
+      if (this.$route.query.rows != val)
+        this.$router.push({ query: { ...this.$route.query, rows: val } });
+    },
+    filterType(val) {
+      if (this.$route.query.type != val)
+        this.$router.push({ query: { ...this.$route.query, type: val } });
+    },
+    filterStatus(val) {
+      if (this.$route.query.status != val)
+        this.$router.push({ query: { ...this.$route.query, status: val } });
+    },
+    filterUser(val) {
+      if (this.$route.query.user != val)
+        this.$router.push({ query: { ...this.$route.query, user: val } });
+    },
+    filterOrder(val) {
+      if (this.$route.query.order != val)
+        this.$router.push({ query: { ...this.$route.query, order: val } });
+    },
+    sortCol(val) {
+      if (this.$route.query.sort != val)
+        this.$router.push({ query: { ...this.$route.query, sort: val } });
+    }
+  },
   computed: {
     ...mapState({
       rowsPerPage: state => state.transfer.rowsPerPage,
       sortCol: state => state.transfer.sortCol,
       filterType: state => state.transfer.filterType,
       filterStatus: state => state.transfer.filterStatus,
-      filterCountry: state => state.transfer.filterCountry,
       filterUser: state => state.transfer.filterUser,
       filterOrder: state => state.transfer.filterOrder,
       currentUser: state => state.login.currentUser
     })
   },
   methods: {
+    setFilterFromRoute() {
+      const { rows, type, status, user, order, sort } = this.$route.query;
+      if (rows) this.changeRowsPerPage(Number(rows));
+      if (type) this.changeFilterType(Number(type));
+      if (status) this.changeFilterStatus(Number(status));
+      if (order) this.changeFilterOrder(Number(order));
+      if (user) this.changeFilterUser(Number(user));
+      if (sort) this.setSortCol(sort);
+    },
     ...mapActions("transfer", [
       "changeRowsPerPage",
       "changeFilterType",

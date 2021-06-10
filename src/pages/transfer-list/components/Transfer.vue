@@ -11,18 +11,41 @@
         <v-btn icon>
           <v-icon>mdi-currency-usd</v-icon>
         </v-btn>
-        <span class="text-h4" v-text="transfer.vnd.toLocaleString()"></span>
+        <span
+          class="text-h4 font-weight-bold"
+          v-text="transfer.vnd.toLocaleString()"
+        ></span>
         <v-spacer></v-spacer>
-        <v-btn v-if="canEditForUser" icon @click="editTransfer">
+        <v-btn
+          v-tooltip="'Chỉnh sửa'"
+          v-if="canEditForUser"
+          icon
+          @click="editTransfer"
+        >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-        <v-btn v-if="canDelete" icon @click="deleteTransferClick">
+        <v-btn
+          v-tooltip="'Xóa'"
+          v-if="canDelete"
+          icon
+          @click="deleteTransferClick"
+        >
           <v-icon>mdi-close-thick</v-icon>
         </v-btn>
-        <v-btn v-if="!transfer.status && canMod" icon @click="changeStatus(1)">
+        <v-btn
+          v-if="transfer.status != 1 && canMod"
+          v-tooltip="'Đã nhận'"
+          icon
+          @click="changeStatus(1)"
+        >
           <v-icon>mdi-check-bold</v-icon>
         </v-btn>
-        <v-btn v-if="transfer.status && canDelete" icon @click="changeStatus(0)">
+        <v-btn
+          v-if="transfer.status === 1 && canDelete"
+          v-tooltip="'Chưa nhận'"
+          icon
+          @click="changeStatus(0)"
+        >
           <v-icon>mdi-undo-variant</v-icon>
         </v-btn>
       </v-row>
@@ -63,16 +86,28 @@
         </v-list-item>
       </v-list>
     </v-container>
+    <v-container class="ma-0 px-0 py-2">
+      <v-slide-group show-arrows="always">
+        <v-slide-item v-for="order in transfer.orders" :key="order.orderId">
+          <OrderThumbnail :order="order" />
+        </v-slide-item>
+      </v-slide-group>
+    </v-container>
   </v-sheet>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import OrderThumbnail from "./OrderThumbnail";
 export default {
   props: ["transfer"],
   components: {
-    UserDropdown: () => import("./UserDropdown")
+    UserDropdown: () => import("./UserDropdown"),
+    OrderThumbnail
   },
+  data: () => ({
+    orderStatusMap: [0, 5, 2]
+  }),
   created() {},
   computed: {
     canDelete() {
@@ -95,6 +130,11 @@ export default {
     },
     changeStatus(status) {
       const id = this.transfer.transferId;
+      this.transfer.orders.map(({ orderId }) => {
+        const orderStatus = this.orderStatusMap[status];
+        if (orderStatus)
+          this.updateOrderStatus({ id: orderId, status: orderStatus });
+      });
       this.updateStatus({ id, status });
     },
     deleteTransferClick() {
@@ -106,7 +146,10 @@ export default {
       "deleteTransfer",
       "setEditingTransfer",
       "setEditDialog"
-    ])
+    ]),
+    ...mapActions("order", {
+      updateOrderStatus: "updateStatus"
+    })
   }
 };
 </script>

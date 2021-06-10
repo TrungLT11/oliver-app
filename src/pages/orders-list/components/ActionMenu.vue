@@ -13,14 +13,29 @@
         </v-icon>
       </v-btn>
     </template>
-    <v-btn fab dark small color="blue" @click="selectAll(false)">
+    <v-btn
+      v-tooltip="'Bỏ chọn'"
+      fab
+      dark
+      small
+      color="blue"
+      @click="selectAll(false)"
+    >
       <v-icon> mdi-checkbox-multiple-blank-outline</v-icon>
     </v-btn>
-    <v-btn fab dark small color="blue" @click="selectAll(true)">
+    <v-btn
+      v-tooltip="'Chọn tất cả'"
+      fab
+      dark
+      small
+      color="blue"
+      @click="selectAll(true)"
+    >
       <v-icon> mdi-checkbox-multiple-marked-outline</v-icon>
     </v-btn>
     <v-btn
       v-show="anySelected"
+      v-tooltip="'Tạo phiếu giao hàng'"
       fab
       dark
       small
@@ -36,6 +51,7 @@
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           v-show="anySelected"
+          v-tooltip="'Đổi trạng thái'"
           fab
           dark
           small

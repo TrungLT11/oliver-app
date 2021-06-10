@@ -2,7 +2,7 @@ import moment from "moment";
 const userDataString = localStorage.getItem("user");
 const userData = userDataString ? JSON.parse(userDataString) : {};
 
-const newOrder = () => ({
+const newOrder = (id) => ({
   arrivalDate: "",
   brand: "",
   chargeMoney: "",
@@ -20,7 +20,7 @@ const newOrder = () => ({
   note: "",
   offVal: 0,
   orderDate: moment().format("YYYY-MM-DD"),
-  orderId: "",
+  orderId: id,
   orderNumber: "",
   outM: "",
   outVnd: 1,

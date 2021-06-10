@@ -2,23 +2,24 @@ import api from "@/utils/api";
 import Order from "@/models/order";
 import newOrder from "@/models/NewOrder";
 import { last } from "lodash";
+const initState = () => ({
+  orders: [],
+  filterStatus: -1,
+  filterSite: "",
+  filterUser: -1,
+  filterCountry: -1,
+  page: 1,
+  rowsPerPage: 10,
+  total: 0,
+  fetching: false,
+  editingOrder: newOrder(),
+  editDialog: false,
+  cloningOrder: newOrder(),
+  cloneDialog: false,
+  multiSelected: []
+});
 export default {
-  state: () => ({
-    orders: [],
-    filterStatus: -1,
-    filterSite: "",
-    filterUser: -1,
-    filterCountry: -1,
-    page: 1,
-    rowsPerPage: 10,
-    total: 0,
-    fetching: false,
-    editingOrder: newOrder(),
-    editDialog: false,
-    cloningOrder: newOrder(),
-    cloneDialog: false,
-    multiSelected: []
-  }),
+  state: initState(),
 
   mutations: {},
 
@@ -128,6 +129,9 @@ export default {
     },
     setMultiSelected({ state }, value) {
       state.multiSelected = value;
+    },
+    reset({ state }) {
+      Object.assign(state, initState())
     }
   },
   namespaced: true

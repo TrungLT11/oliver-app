@@ -79,12 +79,12 @@ export default {
       {
         icon: "mdi-text-box-multiple",
         title: "order-list",
-        to: "/"
+        to: "/order"
       },
       {
         icon: "mdi-text-box-plus",
         title: "new-order",
-        to: "/order/new"
+        to: "/new-order"
       },
       {
         icon: "mdi-cash-multiple",

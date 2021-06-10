@@ -1,60 +1,31 @@
 <template>
   <v-container class="pa-6" fluid v-if="currentUser.admin">
-    <v-row align="center">
-      <v-col>
-        <v-card class="ma-0 text-center" color="green" dark>
-          <v-card-text>
-            <v-sheet color="rgba(0, 0, 0, .12)">
-              <v-sparkline
-                :value="saleStats"
-                :labels="saleLabels"
-                color="rgba(255, 255, 255, .7)"
-                height="75"
-                padding="16"
-                line-width="2"
-                stroke-linecap="round"
-                smooth
-                show-labels
-              >
-                <template v-slot:label="item">{{ item.value }} </template>
-              </v-sparkline>
-            </v-sheet>
-          </v-card-text>
-
-          <v-divider></v-divider>
-          <v-card-actions class="justify-center">
-            <v-btn block text>
-              Tiền đơn hàng 7 ngày gần đây
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+    <v-row>
+      <v-col cols="12" lg="6">
+        <base-material-chart-card
+          :data="saleData"
+          :options="lineChartOptions"
+          color="green"
+          hover-reveal
+          type="Line"
+        >
+          <v-btn block color="green">
+            Tiền đơn hàng 7 ngày gần đây
+          </v-btn>
+        </base-material-chart-card>
       </v-col>
-      <v-col>
-        <v-card class="ma-0 text-center" color="blue" dark>
-          <v-card-text>
-            <v-sheet color="rgba(0, 0, 0, .12)">
-              <v-sparkline
-                :value="bankStats"
-                :labels="bankLabels"
-                color="rgba(255, 255, 255, .7)"
-                height="75"
-                padding="16"
-                line-width="2"
-                stroke-linecap="round"
-                smooth
-              >
-                <template v-slot:label="item">{{ item.value }} </template>
-              </v-sparkline>
-            </v-sheet>
-          </v-card-text>
-
-          <v-divider></v-divider>
-          <v-card-actions class="justify-center">
-            <v-btn block text>
-              Tiền chuyển khoản 7 ngày gần đây
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+      <v-col cols="12" lg="6">
+        <base-material-chart-card
+          :data="bankData"
+          :options="lineChartOptions"
+          color="blue"
+          hover-reveal
+          type="Line"
+        >
+          <v-btn block color="blue">
+            Tiền chuyển khoản 7 ngày gần đây
+          </v-btn>
+        </base-material-chart-card>
       </v-col>
     </v-row>
     <v-overlay :value="fetching" opacity=".75">
@@ -73,28 +44,39 @@ import { mapActions, mapState } from "vuex";
 import millify from "millify";
 import api from "@/utils/api";
 export default {
-  name: "TransferList",
+  name: "Statistic",
   data() {
     return {
+      lineChartOptions: {
+        chartPadding: {
+          top: 30
+        }
+      },
       saleStats: [],
       bankStats: [],
       fetching: false
     };
   },
   computed: {
-    saleLabels() {
-      return this.saleStats.map(s =>
-        millify(s, {
-          precision: 2
-        })
-      );
+    saleData() {
+      return {
+        series: [this.saleStats.map(s => s.sale / 1000000)],
+        labels: this.saleStats.map(s =>
+          millify(s.sale, {
+            precision: 1
+          })
+        )
+      };
     },
-    bankLabels() {
-      return this.bankStats.map(s =>
-        millify(s, {
-          precision: 2
-        })
-      );
+    bankData() {
+      return {
+        series: [this.bankStats.map(s => s.vnd / 1000000)],
+        labels: this.bankStats.map(s =>
+          millify(s.vnd, {
+            precision: 1
+          })
+        )
+      };
     },
     ...mapState({
       currentUser: state => state.login.currentUser
@@ -114,11 +96,11 @@ export default {
     },
     async getSaleStats(days) {
       const response = await api.getStats({ type: "salesByDay", days });
-      this.saleStats = response.map(r => r.sale).reverse();
+      this.saleStats = response.reverse();
     },
     async getBankStats(days) {
       const response = await api.getStats({ type: "transfersByDay", days });
-      this.bankStats = response.map(r => r.vnd).reverse();
+      this.bankStats = response.reverse();
     },
     ...mapActions("exchange", ["fetchExchange", "updateExchangeRate"])
   }

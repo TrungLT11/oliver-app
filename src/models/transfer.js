@@ -1,4 +1,5 @@
 import moment from "moment";
+import Order from "@/models/order";
 class Transfer {
   constructor(data) {
     this.transferId = data.TransferId;
@@ -12,6 +13,7 @@ class Transfer {
     this.type = data.Type;
     this.bank = data.Bank;
     this.status = data.Status;
+    this.orders = data.Orders ? data.Orders.map(o => new Order(o)) : [];
     // USER INFO
     this.user = {
       username: data.user,
@@ -26,12 +28,8 @@ class Transfer {
 
   get cardColor() {
     if (this.status === 0) return "grey darken-2";
-    if (this.status === 1) {
-      if (this.type === 2) return "blue darken-3";
-      if (this.type === 3) return "yellow darken-3";
-      if (this.type === 4) return "red darken-3";
-      return "green darken-3";
-    }
+    if (this.status === 1) return "green darken-3";
+    return "red darken-3"
   }
 
   get displayValue() {
@@ -45,8 +43,7 @@ class Transfer {
     if (this.type === 2) return "COD-HN";
     if (this.type === 3) return "COD-TINH";
     if (this.type === 4) return "OTHER";
-    return "TDCK"
-    
+    return "TDCK";
   }
 }
 const numberWithCommas = x =>

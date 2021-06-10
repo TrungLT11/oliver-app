@@ -11,8 +11,8 @@
           v-for="transfer in transfers"
           :key="transfer.transferId"
           cols="12"
-          sm="6"
-          lg="4"
+          sm="12"
+          lg="6"
         >
           <Transfer :transfer="transfer" /> </v-col
       ></v-row>

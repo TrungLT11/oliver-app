@@ -38,6 +38,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-if="canMod"
+            v-tooltip="'Trạng thái'"
             class="mr-1"
             small
             depressed
@@ -109,6 +110,7 @@
       </v-menu>
       <v-btn
         v-if="canEditForUser"
+        v-tooltip="'Sửa'"
         class="mr-1"
         dark
         small
@@ -120,6 +122,7 @@
       </v-btn>
       <v-btn
         v-if="canEditForUser"
+        v-tooltip="'Clone'"
         class="mr-1"
         dark
         small
@@ -131,6 +134,7 @@
       </v-btn>
       <v-btn
         v-if="canDelete || !order.status"
+        v-tooltip="'Xóa'"
         class="mr-1"
         dark
         small
