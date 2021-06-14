@@ -1,36 +1,34 @@
 <template>
-  <v-container fluid>
-    <v-row align="center" dense>
-      <v-col>
-        <v-autocomplete
-          :items="userOptions"
-          :value="filterUser"
-          label="Tìm theo tên"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterUser"
-        >
-        </v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-select
-          :items="rowOptions"
-          :value="rowsPerPage"
-          label="Rows"
-          dense
-          outlined
-          hide-details
-          single-line
-          @change="changeRowsPerPage"
-        ></v-select>
-      </v-col>
-    </v-row>
+  <v-row align="center">
+    <v-col>
+      <v-autocomplete
+        :items="userOptions"
+        :value="filterUser"
+        label="Tìm theo tên"
+        dense
+        outlined
+        hide-details
+        single-line
+        clearable
+        @change="changeFilterUser"
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col>
+      <v-select
+        :items="rowOptions"
+        :value="rowsPerPage"
+        label="Rows"
+        dense
+        outlined
+        hide-details
+        single-line
+        @change="changeRowsPerPage"
+      ></v-select>
+    </v-col>
     <CreateUserDialog :userOptions="userOptions" />
     <EditUserDialog :userOptions="userOptions" />
-  </v-container>
+  </v-row>
 </template>
 
 <script>

@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { isEmpty } from "lodash";
 export default {
   name: "DashboardIndex",
 
@@ -26,7 +27,7 @@ export default {
   methods: {
     forceRerender() {
       this.render = false;
-      this.$router.push({ query: {} });
+      if (!isEmpty(this.$route.query)) this.$router.push({ query: {} });
       this.$store.dispatch("order/reset");
       this.$store.dispatch("transfer/reset");
       this.$nextTick(() => {

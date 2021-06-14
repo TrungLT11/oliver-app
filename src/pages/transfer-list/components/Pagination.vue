@@ -5,6 +5,7 @@
         <v-pagination
           :value="page"
           :length="totalPage"
+          :total-visible="20"
           @input="changePage"
         ></v-pagination>
       </v-col>

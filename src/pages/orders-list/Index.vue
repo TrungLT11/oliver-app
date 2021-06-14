@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-app-bar>
-      <Filters />
-    </v-app-bar>
     <v-container fluid>
+      <Filters />
       <ActionMenu v-if="currentUser.admin" />
       <div v-for="order in orders" :key="order.orderId">
         <Order :order="order" />

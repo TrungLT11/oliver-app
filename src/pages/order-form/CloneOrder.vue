@@ -15,7 +15,7 @@
         <v-toolbar-title>Tạo Đơn hàng - Clone</v-toolbar-title>
       </v-toolbar>
       <v-container class="ma-0 pa-3" fluid>
-        <order-form :order="cloningOrder" @submit="create" @cancel="cancel" />
+        <order-form :order="passingOrder" @submit="create" @cancel="cancel" />
       </v-container>
     </v-card>
   </v-dialog>
@@ -25,10 +25,16 @@
 import { mapActions, mapState } from "vuex";
 import OrderForm from "./components/OrderForm";
 import newOrder from "@/models/NewOrder";
+import moment from "moment";
 // import difference from "@/utils/index";
 export default {
   components: { OrderForm },
   computed: {
+    passingOrder() {
+      return Object.assign(this.cloningOrder, {
+        orderDate: moment().format("YYYY-MM-DD")
+      });
+    },
     ...mapState({
       cloningOrder: state => state.order.cloningOrder,
       cloneDialog: state => state.order.cloneDialog

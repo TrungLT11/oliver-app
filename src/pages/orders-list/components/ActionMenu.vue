@@ -15,6 +15,7 @@
     </template>
     <v-btn
       v-tooltip="'Bỏ chọn'"
+      v-show="anySelected"
       fab
       dark
       small
@@ -47,11 +48,12 @@
     <!-- <v-btn v-show="anySelected" fab dark small color="red">
       <v-icon>mdi-file-download-outline</v-icon>
     </v-btn> -->
-    <v-menu top rounded="pill" offset-y nudge-top="10">
+    <v-menu top auto fixed rounded="pill" offset-y nudge-top="10">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           v-show="anySelected"
           v-tooltip="'Đổi trạng thái'"
+          transition="slide-x-reverse-transition"
           fab
           dark
           small

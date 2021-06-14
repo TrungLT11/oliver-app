@@ -23,6 +23,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
+import { round } from "lodash";
 import OrderForm from "./components/OrderForm";
 import newOrder from "@/models/NewOrder";
 import difference from "@/utils/index";
@@ -36,11 +37,32 @@ export default {
   },
   methods: {
     async update({ id, order }) {
-      // console.log(difference(order, this.editingOrder))
-      // console.log(difference(this.editingOrder,order))
+      this.saveHistory(order);
       await this.updateOrder({ id, order });
       this.fetchOrders();
       this.cancel();
+    },
+    saveHistory(order) {
+      const _before = this.editingOrder;
+      const after = {
+        ...order,
+        chargeMoney: round(order.chargeMoney * order.rate, -3),
+        total: round(order.total * order.rate, -3),
+        totalCommission: round(order.totalCommission * order.rate, -3),
+        totalin: round(order.totalin * order.rate, -3),
+        shippingCharge: 0,
+        debt: 0
+      };
+      const before = {
+        ..._before,
+        chargeMoney: round(_before.chargeMoney * _before.rate, -3),
+        total: round(_before.total * _before.rate, -3),
+        totalCommission: round(_before.totalCommission * _before.rate, -3),
+        totalin: round(_before.totalin * _before.rate, -3),
+        shippingCharge: 0,
+        debt: 0
+      };
+      const difference = difference(after, before);
     },
     cancel() {
       this.setEditDialog(false);

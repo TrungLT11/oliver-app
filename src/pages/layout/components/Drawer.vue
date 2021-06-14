@@ -47,6 +47,10 @@
         <base-item v-else :key="`item-${i}`" :item="item" />
       </template>
 
+      <base-item
+        v-if="currentUser.admin===1"
+        :item="{ icon: 'mdi-cart', title: 'Bên Mua', to: '/partner' }"
+      />
       <!-- Style cascading bug  -->
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->
       <div />
@@ -78,22 +82,22 @@ export default {
     items: [
       {
         icon: "mdi-text-box-multiple",
-        title: "order-list",
+        title: "Danh Sách Đơn Hàng",
         to: "/order"
       },
       {
         icon: "mdi-text-box-plus",
-        title: "new-order",
+        title: "Nhập Đơn Hàng",
         to: "/new-order"
       },
       {
         icon: "mdi-cash-multiple",
-        title: "transfer-list",
+        title: "Công Nợ",
         to: "/transfer"
       },
       {
         icon: "mdi-currency-sign",
-        title: "exchange-list",
+        title: "Tỷ giá",
         to: "/exchange"
       },
       {
@@ -105,7 +109,7 @@ export default {
         icon: "mdi-finance",
         title: "Thống kê",
         to: "/statistic"
-      },
+      }
       // {
       //   title: "rtables",
       //   icon: "mdi-clipboard-outline",
@@ -136,6 +140,7 @@ export default {
 
   computed: {
     ...mapState(["barColor", "barImage"]),
+    ...mapState("login", ["currentUser"]),
     drawer: {
       get() {
         return this.$store.state.drawer;
@@ -160,7 +165,7 @@ export default {
       return {
         ...item,
         children: item.children ? item.children.map(this.mapItem) : undefined,
-        title: this.$t(item.title)
+        title: item.title
       };
     }
   }

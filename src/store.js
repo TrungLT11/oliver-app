@@ -6,6 +6,7 @@ import order from "@/store/order";
 import transfer from "@/store/transfer";
 import exchange from "@/store/exchange";
 import user from "@/store/user";
+import partner from "@/store/partner";
 
 Vue.use(Vuex);
 
@@ -25,5 +26,5 @@ export default new Vuex.Store({
     }
   },
   actions: {},
-  modules: { order, exchange, login, transfer, user }
+  modules: { order, exchange, login, transfer, user, partner }
 });

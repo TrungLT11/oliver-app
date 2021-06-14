@@ -105,3 +105,24 @@
   opacity: 1;
   transition: opacity 0.15s;
 }
+
+.chartist-tooltip {
+  font-family: Roboto, sans-serif !important;
+  font-size: 12px;
+  position: absolute;
+  background: rgba(55, 55, 55, 0.95);
+  color: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+.chartist-tooltip:before {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: rgba(55, 55, 55, 0.95);
+}

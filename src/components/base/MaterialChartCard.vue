@@ -12,7 +12,7 @@
         :ratio="ratio"
         :responsive-options="responsiveOptions"
         :type="type"
-        style="max-height: 150px;"
+        :style="`max-height: ${height}px`"
       />
     </template>
 
@@ -62,6 +62,10 @@
         required: true,
         validator: v => ['Bar', 'Line', 'Pie'].includes(v),
       },
+      height: {
+        type: String || Number,
+        default: "150"
+      }
     },
   }
 </script>

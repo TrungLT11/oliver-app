@@ -35,6 +35,7 @@ class Order {
     this.totalin = data.Totalin;
     this.transfered = data.Transfered;
     this.userId = data.UserId;
+    this.sellerId = data.SellerId;
     this.weight = data.Weight;
     this.weightRate = data.WeightRate;
     // USER INFO

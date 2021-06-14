@@ -1,6 +1,14 @@
 <template>
   <div id="settings-wrapper">
-    <v-btn v-tooltip="'Đăng xuất'" id="logout" class="ma-2" min-width="0" icon large @click="logout()">
+    <v-btn
+      v-tooltip="'Đăng xuất'"
+      id="logout"
+      class="ma-2"
+      min-width="0"
+      icon
+      large
+      @click="logout()"
+    >
       <v-icon>mdi-logout</v-icon>
     </v-btn>
     <v-btn id="settings" class="ma-2" min-width="0" icon large>
@@ -10,11 +18,10 @@
       v-model="menu"
       :close-on-content-click="false"
       activator="#settings"
-      bottom
       content-class="v-settings"
+      top
       right
       nudge-right="8"
-      offset-x
       origin="bottom left"
       transition="scale-transition"
     >
@@ -39,6 +46,9 @@
           <v-divider class="my-4 secondary" />
 
           <v-row align="center" no-gutters>
+            <v-col cols="auto" class="mr-2">
+              <v-icon @click="menu = false">mdi-close-circle</v-icon>
+            </v-col>
             <v-col cols="auto">
               Chế độ tối
             </v-col>

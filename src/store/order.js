@@ -7,6 +7,7 @@ const initState = () => ({
   filterStatus: -1,
   filterSite: "",
   filterUser: -1,
+  filterPartner: -1,
   filterCountry: -1,
   page: 1,
   rowsPerPage: 10,
@@ -25,12 +26,12 @@ export default {
 
   getters: {
     conditionPayload: state => {
-      const { filterSite, filterStatus, filterUser, filterCountry } = state;
+      const { filterSite, filterStatus, filterUser, filterPartner, filterCountry } = state;
       const payload = {};
       if (filterSite.length) payload[`orders.Site`] = filterSite;
       if (filterStatus != -1) payload[`orders.Status`] = filterStatus;
       if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
-      if (filterUser != -1) payload[`orders.UserId`] = filterUser;
+      if (filterPartner != -1) payload[`orders.Method`] = filterPartner;
       return payload;
     },
     selectedOrders: state =>
@@ -41,7 +42,7 @@ export default {
 
   actions: {
     async fetchOrders({ state }) {
-      const { filterSite, filterStatus, filterUser, filterCountry } = state;
+      const { filterSite, filterStatus, filterUser, filterPartner, filterCountry } = state;
       const payload = {
         page: state.page,
         rowsPerPage: state.rowsPerPage
@@ -50,6 +51,7 @@ export default {
       if (filterStatus != -1) payload[`orders.Status`] = filterStatus;
       if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
       if (filterUser != -1) payload[`orders.UserId`] = filterUser;
+      if (filterPartner != -1) payload[`orders.Method`] = filterPartner;
       state.fetching = true;
       const { data, total } = await api.fetchOrders(payload);
       state.orders = data.map(_i => new Order(_i));
@@ -101,6 +103,11 @@ export default {
     },
     changeFilterUser({ state, dispatch }, value) {
       state.filterUser = value || -1;
+      state.page = 1;
+      dispatch("fetchOrders");
+    },
+    changeFilterPartner({ state, dispatch }, value) {
+      state.filterPartner = value || -1;
       state.page = 1;
       dispatch("fetchOrders");
     },

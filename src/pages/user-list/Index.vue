@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-app-bar elevation="3" v-show="currentUser.admin">
-      <Filters />
-    </v-app-bar>
     <v-container class="pa-6" fluid>
+      <Filters v-if="currentUser.admin" />
       <ActionMenu v-if="currentUser.admin" />
       <v-row>
         <v-col

@@ -28,7 +28,7 @@ class Transfer {
 
   get cardColor() {
     if (this.status === 0) return "grey darken-2";
-    if (this.status === 1) return "green darken-3";
+    if (this.status === 1) return "blue darken-4";
     return "red darken-3"
   }
 

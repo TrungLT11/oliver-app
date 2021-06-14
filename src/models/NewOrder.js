@@ -38,6 +38,7 @@ const newOrder = (id) => ({
   totalCommission: "",
   totalin: "",
   transfered: "",
+  sellerId: 0,
   userId: userData.id,
   weight: 0,
   weightRate: 11.0

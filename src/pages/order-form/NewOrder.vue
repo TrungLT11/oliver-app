@@ -1,10 +1,17 @@
 <template>
-  <v-container class="ma-0 pa-2" fluid>
-    <v-toolbar dark color="primary" height="48">
+  <div>
+    <v-toolbar dark elevation="0" color="primary" height="48">
       <v-toolbar-title>Đơn Hàng Mới</v-toolbar-title>
     </v-toolbar>
-    <order-form v-if="render" @submit="create" @cancel="cancel" :isCreate="true" />
-  </v-container>
+    <v-container class="ma-0 pa-2" fluid>
+      <order-form
+        v-if="render"
+        @submit="create"
+        @cancel="cancel"
+        :isCreate="true"
+      />
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -17,7 +24,7 @@ export default {
   }),
   methods: {
     cancel() {
-      this.$router.push("/")
+      this.$router.push("/");
     },
     async create({ order }) {
       try {

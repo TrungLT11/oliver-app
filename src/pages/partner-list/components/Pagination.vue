@@ -22,13 +22,13 @@ export default {
       return Math.ceil(this.total / this.rowsPerPage);
     },
     ...mapState({
-      page: state => state.user.page,
-      rowsPerPage: state => state.user.rowsPerPage,
-      total: state => state.user.total
+      page: state => state.partner.page,
+      rowsPerPage: state => state.partner.rowsPerPage,
+      total: state => state.partner.total
     })
   },
   methods: {
-    ...mapActions("user", ["changePage"])
+    ...mapActions("partner", ["changePage"])
   }
 };
 </script>

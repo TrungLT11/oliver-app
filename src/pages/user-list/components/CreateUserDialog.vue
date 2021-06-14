@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="createDialog" width="450" origin="bottom right" persistent>
+  <v-dialog :value="createDialog" width="550" origin="bottom right" persistent>
     <v-form ref="form" @submit.prevent="submit">
       <v-card>
         <v-toolbar dark color="primary">
@@ -10,7 +10,19 @@
           </v-btn>
         </v-toolbar>
         <v-container>
-          <v-row>
+          <v-container>
+            <v-row align="center" justify="center">
+              <v-btn-toggle v-model="type" dark dense borderless mandatory>
+                <v-btn small>
+                  Người dùng
+                </v-btn>
+                <v-btn small>
+                  Nhân viên
+                </v-btn>
+              </v-btn-toggle>
+            </v-row>
+          </v-container>
+          <v-row dense>
             <v-col>
               <v-text-field
                 v-model="user.user"
@@ -28,12 +40,7 @@
               />
             </v-col>
           </v-row>
-          <v-text-field
-            v-model="user.mail"
-            label="Email/FB"
-            prepend-inner-icon="mdi-email"
-          />
-          <v-row>
+          <v-row dense>
             <v-col>
               <v-text-field
                 v-model="user.fullname"
@@ -47,13 +54,26 @@
                 v-model="user.mobile"
                 label="SĐT"
                 prepend-inner-icon="mdi-phone"
-            /></v-col>
+              />
+            </v-col>
           </v-row>
-          <v-text-field
-            v-model="user.address"
-            label="Địa Chỉ"
-            prepend-inner-icon="mdi-map-marker"
-          />
+
+          <v-row dense>
+            <v-col>
+              <v-text-field
+                v-model="user.mail"
+                label="Email/FB"
+                prepend-inner-icon="mdi-email"
+              />
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="user.address"
+                label="Địa Chỉ"
+                prepend-inner-icon="mdi-map-marker"
+              />
+            </v-col>
+          </v-row>
           <v-textarea
             v-model="user.note"
             label="Ghi chú"
@@ -85,6 +105,7 @@
             ></v-date-picker>
           </v-menu>
           <v-autocomplete
+            v-if="type === 1"
             v-model="user.admin"
             :items="adminOptions"
             label="Loại Admin"
@@ -114,6 +135,7 @@ export default {
   props: ["userOptions"],
   data: () => ({
     rules,
+    type: 0,
     user: {
       user: "",
       mail: "",
@@ -126,7 +148,7 @@ export default {
       admin: 0
     },
     birthdayDatePicker: false,
-    adminOptions: [0, 2]
+    adminOptions: [2, 3]
   }),
   computed: {
     ...mapState({
@@ -146,6 +168,12 @@ export default {
       this.setCreateDialog(false);
     },
     ...mapActions("user", ["setCreateDialog", "createUser", "fetchUsers"])
+  },
+  watch: {
+    type(val) {
+      if (!val) this.user.admin = 0;
+      if (val === 1) this.user.admin = 2;
+    }
   }
 };
 </script>

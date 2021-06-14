@@ -71,17 +71,18 @@
           </template>
         </v-autocomplete>
       </v-col>
-      <v-col>
-        <v-select
-          :items="rowOptions"
-          :value="rowsPerPage"
-          label="Rows"
+      <v-col v-if="this.currentUser.admin">
+        <v-autocomplete
+          :items="partnerOptions"
+          :value="filterPartner"
+          label="Bên mua"
           dense
           outlined
           hide-details
           single-line
-          @change="changeRowsPerPage"
-        ></v-select>
+          clearable
+          @change="changeFilterPartner"
+        ></v-autocomplete>
       </v-col>
     </v-row>
     <CreateDialog :userOptions="userOptions" :isOrder="true" />
@@ -97,6 +98,7 @@ export default {
     rowOptions: [10, 20, 30, 40, 50],
     siteOptions: [],
     userOptions: [],
+    partnerOptions: [],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
       { text: "Mới nhận", value: 1, color: "orange" },
@@ -122,6 +124,17 @@ export default {
       table: "members",
       colName: "user, mobile, id"
     });
+    const partnerData = await this.fetchOrderCol({
+      table: "partners",
+      colName: "name,id"
+    });
+    this.partnerOptions = [
+      { text: "Tự mua", value: 0 },
+      ...partnerData.map(_i => ({
+        text: _i.name,
+        value: _i.id
+      }))
+    ];
     this.siteOptions = siteData.map(_i => _i.site || "blank");
     this.userOptions = userData.map(_i => ({
       text: [_i.user, _i.mobile.replace(/[^\d]/g, "")]
@@ -137,6 +150,7 @@ export default {
       filterStatus: state => state.order.filterStatus,
       filterCountry: state => state.order.filterCountry,
       filterUser: state => state.order.filterUser,
+      filterPartner: state => state.order.filterPartner,
       currentUser: state => state.login.currentUser
     })
   },
@@ -160,21 +174,27 @@ export default {
     filterUser(val) {
       if (this.$route.query.user != val)
         this.$router.push({ query: { ...this.$route.query, user: val } });
+    },
+    filterPartner(val) {
+      if (this.$route.query.partner != val)
+        this.$router.push({ query: { ...this.$route.query, partner: val } });
     }
   },
   methods: {
     setFilterFromRoute() {
-      const { rows, site, status, country, user } = this.$route.query;
+      const { rows, site, status, country, user, partner } = this.$route.query;
       if (rows) this.changeRowsPerPage(Number(rows));
       if (site) this.changeFilterSite(site);
       if (status) this.changeFilterStatus(Number(status));
       if (country) this.changeFilterCountry(Number(country));
       if (user) this.changeFilterUser(Number(user));
+      if (partner) this.changeFilterPartner(Number(partner));
     },
     ...mapActions("order", [
       "changeRowsPerPage",
       "changeFilterSite",
       "changeFilterUser",
+      "changeFilterPartner",
       "changeFilterStatus",
       "changeFilterCountry",
       "fetchOrderCol"

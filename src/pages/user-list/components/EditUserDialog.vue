@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :value="editDialog" width="450" origin="bottom right" persistent>
+  <v-dialog :value="editDialog" width="550" origin="bottom right" persistent>
     <v-form ref="form" @submit.prevent="submit">
       <v-card>
         <v-toolbar dark color="primary">

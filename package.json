@@ -6,6 +6,7 @@
     "dev": "vue-cli-service serve --open",
     "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:demo": "NODE_ENV=demo vue-cli-service build",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "now-start": "vue-cli-service serve",
@@ -14,6 +15,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "chartist-plugin-tooltips": "^0.0.17",
     "core-js": "^3.6.2",
     "extract-domain": "^2.3.3",
     "lodash": "^4.17.21",

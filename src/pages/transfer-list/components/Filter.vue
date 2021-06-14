@@ -1,114 +1,112 @@
 <template>
-  <v-container fluid>
-    <v-row align="center" dense>
-      <v-col>
-        <v-autocomplete
-          :items="statusOptions"
-          :value="filterStatus"
-          label="Trạng thái"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterStatus"
-        >
-          <template slot="item" slot-scope="{ item }">
-            <span>
-              <v-icon :size="12" :color="item.color" class="mr-1">
-                mdi-checkbox-blank
-              </v-icon>
-              <span>{{ item.text }}</span>
-            </span>
-          </template>
-        </v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          :items="orderOptions"
-          :value="filterOrder"
-          label="Loại đơn"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterOrder"
-        >
-          <template slot="item" slot-scope="{ item }">
-            <span>
-              <v-icon :size="12" :color="item.color" class="mr-1">
-                mdi-checkbox-blank
-              </v-icon>
-              <span>{{ item.text }}</span>
-            </span>
-          </template>
-        </v-autocomplete>
-      </v-col>
-      <v-col v-if="currentUser.admin">
-        <v-autocomplete
-          :items="userOptions"
-          :value="filterUser"
-          label="User"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterUser"
-        >
-        </v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-autocomplete
-          :items="typeOptions"
-          :value="filterType"
-          label="Loại"
-          dense
-          outlined
-          hide-details
-          single-line
-          clearable
-          @change="changeFilterType"
-        >
-          <template slot="item" slot-scope="{ item }">
-            <span>
-              <v-icon :size="12" :color="item.color" class="mr-1">
-                mdi-checkbox-blank-circle
-              </v-icon>
-              <span>{{ item.text }}</span>
-            </span>
-          </template>
-        </v-autocomplete>
-      </v-col>
-      <v-col>
-        <v-select
-          :items="sortOptions"
-          :value="sortCol"
-          label="Rows"
-          dense
-          outlined
-          hide-details
-          single-line
-          @change="setSortCol"
-        ></v-select>
-      </v-col>
-      <v-col>
-        <v-select
-          :items="rowOptions"
-          :value="rowsPerPage"
-          label="Rows"
-          dense
-          outlined
-          hide-details
-          single-line
-          @change="changeRowsPerPage"
-        ></v-select>
-      </v-col>
-    </v-row>
+  <v-row align="center" dense>
+    <v-col>
+      <v-autocomplete
+        :items="statusOptions"
+        :value="filterStatus"
+        label="Trạng thái"
+        dense
+        outlined
+        hide-details
+        single-line
+        clearable
+        @change="changeFilterStatus"
+      >
+        <template slot="item" slot-scope="{ item }">
+          <span>
+            <v-icon :size="12" :color="item.color" class="mr-1">
+              mdi-checkbox-blank
+            </v-icon>
+            <span>{{ item.text }}</span>
+          </span>
+        </template>
+      </v-autocomplete>
+    </v-col>
+    <v-col>
+      <v-autocomplete
+        :items="orderOptions"
+        :value="filterOrder"
+        label="Loại đơn"
+        dense
+        outlined
+        hide-details
+        single-line
+        clearable
+        @change="changeFilterOrder"
+      >
+        <template slot="item" slot-scope="{ item }">
+          <span>
+            <v-icon :size="12" :color="item.color" class="mr-1">
+              mdi-checkbox-blank
+            </v-icon>
+            <span>{{ item.text }}</span>
+          </span>
+        </template>
+      </v-autocomplete>
+    </v-col>
+    <v-col v-if="currentUser.admin">
+      <v-autocomplete
+        :items="userOptions"
+        :value="filterUser"
+        label="User"
+        dense
+        outlined
+        hide-details
+        single-line
+        clearable
+        @change="changeFilterUser"
+      >
+      </v-autocomplete>
+    </v-col>
+    <v-col>
+      <v-autocomplete
+        :items="typeOptions"
+        :value="filterType"
+        label="Loại"
+        dense
+        outlined
+        hide-details
+        single-line
+        clearable
+        @change="changeFilterType"
+      >
+        <template slot="item" slot-scope="{ item }">
+          <span>
+            <v-icon :size="12" :color="item.color" class="mr-1">
+              mdi-checkbox-blank-circle
+            </v-icon>
+            <span>{{ item.text }}</span>
+          </span>
+        </template>
+      </v-autocomplete>
+    </v-col>
+    <v-col>
+      <v-select
+        :items="sortOptions"
+        :value="sortCol"
+        label="Rows"
+        dense
+        outlined
+        hide-details
+        single-line
+        @change="setSortCol"
+      ></v-select>
+    </v-col>
+    <v-col>
+      <v-select
+        :items="rowOptions"
+        :value="rowsPerPage"
+        label="Rows"
+        dense
+        outlined
+        hide-details
+        single-line
+        @change="changeRowsPerPage"
+      ></v-select>
+    </v-col>
     <CreateDialog :userOptions="userOptions" />
     <EditDialog :userOptions="userOptions" />
-  </v-container>
+  </v-row>
 </template>
 
 <script>

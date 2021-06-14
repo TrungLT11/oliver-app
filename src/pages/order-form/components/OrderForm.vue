@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" @submit.prevent="submit">
+  <v-form ref="form" @change="test" @submit.prevent="submit">
     <v-container class="px-5" fluid>
       <v-row>
         <v-col
@@ -129,7 +129,7 @@
             <v-switch v-model="useTax" flat></v-switch>
           </v-row>
 
-          <v-row class="ma-0 pa-0" justify="space-between">
+          <v-row class="ma-0 pa-0" justify="space-between" align="center">
             <v-text-field
               v-model.number="draft.weight"
               type="number"
@@ -137,6 +137,12 @@
               label="Weight"
               prepend-inner-icon="mdi-weight-kilogram"
             />
+            <v-btn v-tooltip="'Phí Ship'" small outlined tile color="primary"
+              >{{ draft.weight * draft.weightRate }} $</v-btn
+            >
+          </v-row>
+
+          <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.weightRate"
               type="number"
@@ -146,17 +152,16 @@
               prepend-inner-icon="mdi-currency-usd"
             />
           </v-row>
-
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model="draft.totalCommission"
               label="Tổng Tiền Công"
               placeholder="Auto"
               background-color="green lighten-5"
-              prepend-inner-icon="mdi-currency-usd"
+              prepend-inner-icon="mdi-cash-multiple"
             />
           </v-row>
-          <v-row class="ma-0 pa-0" justify="space-between">
+          <!-- <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               :value="draft.weight * draft.weightRate"
               readonly
@@ -167,15 +172,16 @@
               background-color="green lighten-5"
               prepend-inner-icon="mdi-currency-usd"
             />
-          </v-row>
+          </v-row> -->
 
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.totalin"
               label="Mua Vào"
+              type="number"
               placeholder="Auto"
               background-color="green lighten-5"
-              prepend-inner-icon="mdi-cash"
+              prepend-inner-icon="mdi-cash-multiple"
             />
             <!-- <v-checkbox v-model="draft.inVnd" label="VND"></v-checkbox> -->
           </v-row>
@@ -183,9 +189,10 @@
             <v-text-field
               v-model.number="draft.total"
               label="Bán Ra"
-              background-color="green lighten-5"
+              type="number"
               placeholder="Auto"
-              prepend-inner-icon="mdi-cash"
+              background-color="green lighten-5"
+              prepend-inner-icon="mdi-cash-multiple"
             />
             <!-- <v-checkbox v-model="draft.outVnd" label="VND"></v-checkbox> -->
           </v-row>
@@ -195,7 +202,6 @@
           <v-menu
             v-model="orderDatePicker"
             :close-on-content-click="true"
-            :nudge-right="40"
             transition="scale-transition"
             offset-y
             min-width="auto"
@@ -219,7 +225,7 @@
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-autocomplete
               v-model="draft.method"
-              :items="methodOptions"
+              :items="partnerOptions"
               label="Hình Thức Mua"
               prepend-inner-icon="mdi-cart"
             />
@@ -235,12 +241,26 @@
             />
           </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
+            <v-autocomplete
+              v-model="draft.sellerId"
+              :items="sellerOptions"
+              clearable
+              label="Nhân Viên Bán"
+              prepend-inner-icon="mdi-account-check"
+            />
+            <v-text-field
+              v-model="draft.orderNumber"
+              label="Mã Đơn Hàng"
+              prepend-inner-icon="mdi-cart-check"
+            />
+          </v-row>
+          <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model.number="draft.transfered"
               type="number"
               min="0"
               label="Đã Chuyển Khoản"
-              prepend-inner-icon="mdi-currency-usd"
+              prepend-inner-icon="mdi-cash-multiple"
             />
             <v-switch
               v-model="fullyTransfered"
@@ -248,23 +268,12 @@
               flat
             ></v-switch>
           </v-row>
-          <v-row class="ma-0 pa-0" justify="space-between">
-            <v-text-field
-              v-model="draft.orderNumber"
-              label="Mã Đơn Hàng"
-              prepend-inner-icon="mdi-cart-check"
-            />
-            <v-text-field
-              v-model="draft.gcCode"
-              label="Mã Quà Tặng"
-              prepend-inner-icon="mdi-barcode"
-            />
-          </v-row>
           <v-menu
             v-model="arrivalDatePicker"
             :close-on-content-click="true"
-            :nudge-right="40"
             transition="scale-transition"
+            origin="bottom left"
+            top
             offset-y
             min-width="auto"
           >
@@ -340,12 +349,14 @@ export default {
     commission: 50000,
     orderDatePicker: false,
     arrivalDatePicker: false,
-    arrivalDate: moment().format("YYYY-MM-DD"),
+    arrivalDate: null,
     useTax: true,
     fullyTransfered: false,
     exchangeRates: [],
     unwatch: null,
     userOptions: [],
+    partnerOptions: [],
+    sellerOptions: [],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
       { text: "Mới nhận", value: 1, color: "orange" },
@@ -353,12 +364,6 @@ export default {
       { text: "Đã Mua", value: 3, color: "green" },
       { text: "Hàng Về", value: 4, color: "blue" },
       { text: "Đã Nhận", value: 5, color: "blue darken-3" }
-    ],
-    methodOptions: [
-      { text: "Tự Mua", value: 0 },
-      { text: "Bên Mua Hộ 1", value: 1 },
-      { text: "Bên Mua Hộ 2", value: 2 },
-      { text: "Bên Mua Hộ 3", value: 3 }
     ],
     countryOptions: [
       { text: "USA", value: 1, color: "green" },
@@ -378,17 +383,35 @@ export default {
   async created() {
     const userData = await this.fetchOrderCol({
       table: "members",
-      colName: "User,id"
+      colName: "user,id,admin"
     });
     this.userOptions = userData.map(_i => ({
-      text: _i.User,
+      text: _i.user,
       value: _i.id
     }));
+    this.sellerOptions = userData.filter(_u => _u.admin).map(_i => ({
+      text: _i.user,
+      value: _i.id
+    }));
+    const partnerData = await this.fetchOrderCol({
+      table: "partners",
+      colName: "name,id"
+    });
+    this.partnerOptions = [
+      { text: "Tự mua", value: 0 },
+      ...partnerData.map(_i => ({
+        text: _i.name,
+        value: _i.id
+      }))
+    ];
     const exchangeData = await this.fetchExchange();
     this.exchangeRates = exchangeData;
   },
 
   methods: {
+    test(val) {
+      console.log(val)
+    },
     submit() {
       if (!this.$refs.form.validate()) return false;
       const payload = this.compute();
@@ -428,6 +451,7 @@ export default {
       } else {
         this.commissionType = "2";
       }
+      this.arrivalDate = null;
       this.unwatch = this.$watch("commissionType", val => {
         if (val === "1") this.commission = 5;
         else this.commission = 50000;

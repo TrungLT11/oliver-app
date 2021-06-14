@@ -86,8 +86,13 @@
         </v-list-item>
       </v-list>
     </v-container>
-    <v-container class="ma-0 px-0 py-2">
+    <v-container class="ma-0 px-0 py-2" v-if="transfer.orders.length">
       <v-slide-group show-arrows="always">
+        <v-slide-item v-if="transfer.orders.length">
+          <v-chip pill class="ma-1" outlined :color="transfer.cardColor">
+            {{ transfer.orders.length }}
+          </v-chip>
+        </v-slide-item>
         <v-slide-item v-for="order in transfer.orders" :key="order.orderId">
           <OrderThumbnail :order="order" />
         </v-slide-item>

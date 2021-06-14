@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat absolute app dense>
+  <v-app-bar absolute app dense>
     <v-btn @click="setDrawer(!drawer)" small outlined class="mx-3" color="grey darken-1">
       <v-icon>
         mdi-menu

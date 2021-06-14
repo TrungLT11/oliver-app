@@ -1,19 +1,19 @@
 import api from "@/utils/api";
-import User from "@/models/user";
+import Partner from "@/models/partner";
 export default {
   state: () => ({
-    users: [],
+    partners: [],
     filterStatus: -1,
     filterType: "",
-    filterUser: -1,
+    filterPartner: -1,
     filterCountry: -1,
     page: 1,
     rowsPerPage: 30,
     sortCol: "id",
     total: 0,
-    totalUser: 0,
+    totalPartner: 0,
     fetching: false,
-    editingUser: null,
+    editingPartner: null,
     editDialog: false,
     createDialog: false,
     multiSelected: []
@@ -24,77 +24,77 @@ export default {
   getters: {},
 
   actions: {
-    async fetchUsers({ state }) {
+    async fetchPartners({ state }) {
       const payload = {
         page: state.page,
         rowsPerPage: state.rowsPerPage,
         sortCol: state.sortCol,
-        id: state.filterUser != -1 ? state.filterUser : undefined
+        id: state.filterPartner != -1 ? state.filterPartner : undefined
       };
       state.fetching = true;
-      const { data, total, totalUser } = await api.fetchUsers(payload);
-      state.users = data.map(_i => new User(_i));
+      const { data, total, totalPartner } = await api.fetchPartners(payload);
+      state.partners = data.map(_i => new Partner(_i));
       state.total = total;
-      state.totalUser = totalUser;
+      state.totalPartner = totalPartner;
       state.fetching = false;
     },
     async updateStatus({ state, dispatch }, { status, id }) {
-      await api.updateUserStatus({ id, status });
-      dispatch("fetchUsers");
+      await api.updatePartnerStatus({ id, status });
+      dispatch("fetchPartners");
     },
-    async deleteUser({ state, dispatch }, id) {
-      await api.deleteUser({ id });
-      dispatch("fetchUsers");
+    async deletePartner({ state, dispatch }, id) {
+      await api.deletePartner({ id });
+      dispatch("fetchPartners");
     },
-    async createUser({ state, dispatch }, user) {
+    async createPartner({ state, dispatch }, partner) {
       await api
-        .createUser({ user })
+        .createPartner({ partner })
         .catch(({ response }) =>
-          alert(response?.data?.message || "ERROR - create user")
+          alert(response?.data?.message || "ERROR - create partner")
         )
         .then(() => alert("SUCCESS"));
     },
-    async updateUser({ state, dispatch }, { id, user }) {
-      await api.updateUser({ id, user });
-      dispatch("fetchUsers");
+    async updatePartner({ state, dispatch }, { id, partner }) {
+      await api.updatePartner({ id, partner });
+      dispatch("fetchPartners");
     },
     async changeMultiStatus({ state, dispatch }, status) {
       const selectedArray = state.multiSelected;
       await api.updateStatus({ id: selectedArray, status });
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
     changeRowsPerPage({ state, dispatch }, value) {
       state.rowsPerPage = value;
       state.page = 1;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
     changePage({ state, dispatch }, value) {
       state.page = value;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
     changeFilterType({ state, dispatch }, value) {
       state.filterType = value || "";
       state.page = 1;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
-    changeFilterUser({ state, dispatch }, value) {
-      state.filterUser = value || -1;
+    changeFilterPartner({ state, dispatch }, value) {
+      state.filterPartner = value || -1;
       state.page = 1;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
     changeFilterStatus({ state, dispatch }, value) {
       const _v = value === null ? -1 : value;
       state.filterStatus = _v;
       state.page = 1;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
     changeFilterCountry({ state, dispatch }, value) {
       state.filterCountry = value || -1;
       state.page = 1;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     },
-    setEditingUser({ state }, value) {
-      state.editingUser = value;
+    setEditingPartner({ state }, value) {
+      state.editingPartner = value;
     },
     setEditDialog({ state }, value) {
       state.editDialog = value;
@@ -107,7 +107,7 @@ export default {
     },
     setSortCol({ state, dispatch }, value) {
       state.sortCol = value;
-      dispatch("fetchUsers");
+      dispatch("fetchPartners");
     }
   },
   namespaced: true

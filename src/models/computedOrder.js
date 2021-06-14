@@ -38,6 +38,7 @@ class Order {
     this.totalin = data.totalin || 0;
     this.transfered = data.transfered || 0;
     this.userId = data.userId;
+    this.sellerId = data.sellerId || 0;
     this.weight = data.weight || 0;
     this.weightRate = data.weightRate || 0;
 

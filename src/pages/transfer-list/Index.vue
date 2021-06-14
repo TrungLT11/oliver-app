@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-app-bar elevation="3">
-      <Filters />
-    </v-app-bar>
     <v-container class="pa-6" fluid>
+      <Filters />
       <ActionMenu />
       <Statistic />
       <v-row>

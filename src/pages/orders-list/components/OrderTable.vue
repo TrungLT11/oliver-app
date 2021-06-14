@@ -51,7 +51,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr class="text-no-wrap">
           <td>
             <v-chip v-if="order.brand" x-small label outlined>
               {{ order.brand }}

@@ -34,7 +34,7 @@
       ></v-btn>
       <v-spacer></v-spacer>
       <debt-dropdown :order="order" />
-      <v-menu top rounded="pill" offset-y nudge-top="5">
+      <v-menu rounded="pill" offset-y nudge-top="5" top auto fixed>
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             v-if="canMod"
