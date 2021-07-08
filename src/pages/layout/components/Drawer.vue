@@ -49,7 +49,7 @@
 
       <base-item
         v-if="currentUser.admin===1"
-        :item="{ icon: 'mdi-cart', title: 'Bên Mua', to: '/partner' }"
+        :item="{ icon: 'mdi-cart', title: 'Vận Chuyển', to: '/partner' }"
       />
       <!-- Style cascading bug  -->
       <!-- https://github.com/vuetifyjs/vuetify/pull/8574 -->

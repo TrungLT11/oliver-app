@@ -68,7 +68,7 @@ export default {
       name: "",
       mobile: "",
       address: "",
-      note: "",
+      note: ""
     }
   }),
   computed: {
@@ -79,15 +79,29 @@ export default {
   methods: {
     async submit() {
       if (!this.$refs.form.validate()) return false;
-      await this.createPartner({ ...this.partner});
+      await this.createPartner({ ...this.partner });
       this.fetchPartners();
       this.cancel();
     },
     cancel() {
-      this.$refs.form.reset();
+      // this.$refs.form.reset();
       this.setCreateDialog(false);
     },
-    ...mapActions("partner", ["setCreateDialog", "createPartner", "fetchPartners"])
+    ...mapActions("partner", [
+      "setCreateDialog",
+      "createPartner",
+      "fetchPartners"
+    ])
+  },
+  watch: {
+    createDialog() {
+      this.partner = {
+        name: "",
+        mobile: "",
+        address: "",
+        note: ""
+      };
+    }
   }
 };
 </script>

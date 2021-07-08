@@ -31,7 +31,7 @@
             type="number"
             label="Edit"
             append-icon="mdi-check"
-            @click:append.prevent
+            @click:append.prevent="updateExchange(2, ukRateInput)"
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
@@ -48,7 +48,7 @@
             type="number"
             label="Edit"
             append-icon="mdi-check"
-            @click:append.prevent
+            @click:append.prevent="updateExchange(3, spainRateInput)"
           ></v-text-field>
         </base-material-stats-card>
       </v-col>
@@ -65,7 +65,7 @@
             type="number"
             label="Edit"
             append-icon="mdi-check"
-            @click:append.prevent
+            @click:append.prevent="updateExchange(4, krRateInput)"
           ></v-text-field>
         </base-material-stats-card>
       </v-col>

@@ -75,7 +75,7 @@
         <v-autocomplete
           :items="partnerOptions"
           :value="filterPartner"
-          label="Bên mua"
+          label="Vận Chuyển"
           dense
           outlined
           hide-details
@@ -129,7 +129,7 @@ export default {
       colName: "name,id"
     });
     this.partnerOptions = [
-      { text: "Tự mua", value: 0 },
+      { text: "Other", value: 0 },
       ...partnerData.map(_i => ({
         text: _i.name,
         value: _i.id

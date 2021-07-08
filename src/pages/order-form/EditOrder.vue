@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     async update({ id, order }) {
-      this.saveHistory(order);
+      // this.saveHistory(order);
       await this.updateOrder({ id, order });
       this.fetchOrders();
       this.cancel();

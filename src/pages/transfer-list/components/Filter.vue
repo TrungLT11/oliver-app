@@ -125,7 +125,7 @@ export default {
     ],
     statusOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },
-      { text: "Đã nhận", value: 1, color: "green" },
+      { text: "Đã nhận", value: 1, color: "blue" },
       { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     orderOptions: [

@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" @change="test" @submit.prevent="submit">
+  <v-form ref="form" @submit.prevent="submit">
     <v-container class="px-5" fluid>
       <v-row>
         <v-col
@@ -226,7 +226,7 @@
             <v-autocomplete
               v-model="draft.method"
               :items="partnerOptions"
-              label="Hình Thức Mua"
+              label="Hình Thức Vận Chuyển"
               prepend-inner-icon="mdi-cart"
             />
           </v-row>
@@ -398,7 +398,7 @@ export default {
       colName: "name,id"
     });
     this.partnerOptions = [
-      { text: "Tự mua", value: 0 },
+      { text: "Other", value: 0 },
       ...partnerData.map(_i => ({
         text: _i.name,
         value: _i.id
@@ -409,9 +409,6 @@ export default {
   },
 
   methods: {
-    test(val) {
-      console.log(val)
-    },
     submit() {
       if (!this.$refs.form.validate()) return false;
       const payload = this.compute();
