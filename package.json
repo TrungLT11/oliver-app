@@ -6,7 +6,7 @@
     "dev": "vue-cli-service serve --open",
     "start": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build:demo": "NODE_ENV=demo vue-cli-service build",
+    "build:demo": "vue-cli-service build --mode demo",
     "lint": "vue-cli-service lint",
     "i18n:report": "vue-cli-service i18n:report --src './src/**/*.?(js|vue)' --locales './src/locales/**/*.json'",
     "now-start": "vue-cli-service serve",
@@ -28,13 +28,12 @@
     "vue-i18n": "^8.15.3",
     "vue-router": "^3.1.3",
     "vue-silentbox": "^2.4.2",
-    "vuetify": "^2.2.11",
+    "vuetify": "^2.5.8",
     "vuetify-toast": "^0.1.1",
     "vuex": "^3.1.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.2",
-    "@vue/cli-plugin-eslint": "^4.1.2",
     "@vue/cli-service": "^4.1.2",
     "@vue/eslint-config-standard": "^5.0.1",
     "@vue/test-utils": "1.0.0-beta.30",

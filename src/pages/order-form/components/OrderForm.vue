@@ -176,6 +176,7 @@
 
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
+              v-if="currentUser.admin === 1"
               v-model.number="draft.totalin"
               label="Mua Vào"
               type="number"
@@ -389,10 +390,12 @@ export default {
       text: _i.user,
       value: _i.id
     }));
-    this.sellerOptions = userData.filter(_u => _u.admin).map(_i => ({
-      text: _i.user,
-      value: _i.id
-    }));
+    this.sellerOptions = userData
+      .filter(_u => _u.admin)
+      .map(_i => ({
+        text: _i.user,
+        value: _i.id
+      }));
     const partnerData = await this.fetchOrderCol({
       table: "partners",
       colName: "name,id"
@@ -460,7 +463,10 @@ export default {
         else this.commission = 50000;
     },
     "draft.country": function(val) {
+      // UK
       if (val === 2) this.draft.weightRate = 9.0;
+      // SPAIN
+      else if (val === 3) this.draft.weightRate = 10.0;
       else this.draft.weightRate = 11.0;
       if (val === 1) this.draft.tax = 10;
       else this.draft.tax = 0;

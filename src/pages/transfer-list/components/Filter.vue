@@ -15,7 +15,7 @@
         <template slot="item" slot-scope="{ item }">
           <span>
             <v-icon :size="12" :color="item.color" class="mr-1">
-              mdi-checkbox-blank
+              mdi-checkbox-blank-circle
             </v-icon>
             <span>{{ item.text }}</span>
           </span>
@@ -124,9 +124,9 @@ export default {
       { text: "Ngày chuyển", value: "TransferDate" }
     ],
     statusOptions: [
-      { text: "Chưa nhận", value: 0, color: "black" },
-      { text: "Đã nhận", value: 1, color: "blue" },
-      { text: "Chưa chuyển khoản", value: 2, color: "red" }
+      { text: "Chưa nhận", value: 0, color: "red" },
+      { text: "Đã nhận", value: 1, color: "blue" }
+      // { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     orderOptions: [
       { text: "Chưa nhận", value: 0, color: "black" },

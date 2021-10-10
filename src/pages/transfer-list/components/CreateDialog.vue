@@ -170,7 +170,7 @@ export default {
     transfer: defaultTransferData,
     exchangeRates: [],
     transferDatePicker: false,
-    orderStatusMap: [0, 5, 2],
+    orderStatusMap: [2, 5, 2],
     typeOptions: [
       { text: "TDCK", value: 1, color: "green" },
       { text: "COD-HN", value: 2, color: "blue" },
@@ -178,9 +178,9 @@ export default {
       { text: "OTHER", value: 4, color: "red" }
     ],
     statusOptions: [
-      { text: "Chưa nhận", value: 0, color: "grey" },
-      { text: "Đã nhận", value: 1, color: "green" },
-      { text: "Chưa chuyển khoản", value: 2, color: "red" }
+      { text: "Chưa nhận", value: 0, color: "red" },
+      { text: "Đã nhận", value: 1, color: "blue" }
+      // { text: "Chưa chuyển khoản", value: 2, color: "red" }
     ],
     countryOptions: [
       { text: "VND", value: 0, color: "black" },

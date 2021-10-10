@@ -127,6 +127,7 @@
           <template v-slot:default>
             <thead>
               <tr>
+                <th>Total</th>
                 <th class="text-left" v-for="item in data" :key="item.name">
                   {{ labelFunction(item) }}
                 </th>
@@ -134,6 +135,7 @@
             </thead>
             <tbody>
               <tr class="text-no-wrap">
+                <td>{{ totalColumnValue }}</td>
                 <td v-for="item in data" :key="item.name">
                   {{ moneyStr(item.value) }}
                 </td>
@@ -151,6 +153,7 @@ import { mapActions, mapState } from "vuex";
 import moment from "moment";
 import millify from "millify";
 import api from "@/utils/api";
+import { sumBy } from "lodash";
 const defaultRange = () => [
   moment()
     .subtract(1, "year")
@@ -190,6 +193,10 @@ export default {
         },
 
         {
+          text: "Tổng chi phí",
+          value: "ROUND(Sum((ShippingCharge+Surcharge)*Rate/1000000),3) as value"
+        },
+        {
           text: "Tổng công mua",
           value: "ROUND(Sum(TotalCommission*Rate/1000000),3) as value"
         }
@@ -224,6 +231,9 @@ export default {
         labels: this.data.map(this.labelFunction),
         series: [this.data.map(d => d.value)]
       };
+    },
+    totalColumnValue() {
+      return this.moneyStr(sumBy(this.data, "value"));
     },
     ...mapState({
       currentUser: state => state.login.currentUser

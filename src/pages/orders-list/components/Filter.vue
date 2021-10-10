@@ -51,6 +51,19 @@
       </v-col>
       <v-col>
         <v-autocomplete
+          :items="orderNumberOptions"
+          :value="filterOrderNumber"
+          label="Mã Đơn Hàng"
+          dense
+          outlined
+          hide-details
+          single-line
+          clearable
+          @change="changeFilterOrderNumber"
+        ></v-autocomplete>
+      </v-col>
+      <v-col>
+        <v-autocomplete
           :items="countryOptions"
           :value="filterCountry"
           label="Nước"
@@ -97,6 +110,7 @@ export default {
   data: () => ({
     rowOptions: [10, 20, 30, 40, 50],
     siteOptions: [],
+    orderNumberOptions: [],
     userOptions: [],
     partnerOptions: [],
     statusOptions: [
@@ -120,6 +134,11 @@ export default {
       table: "orders",
       colName: "site"
     });
+    const orderNumberData = await this.fetchOrderCol({
+      table: "orders",
+      colName: "orderNumber",
+      orderBy: "OrderId DESC"
+    });
     const userData = await this.fetchOrderCol({
       table: "members",
       colName: "user, mobile, id"
@@ -136,6 +155,9 @@ export default {
       }))
     ];
     this.siteOptions = siteData.map(_i => _i.site || "blank");
+    this.orderNumberOptions = orderNumberData.map(
+      _i => _i.orderNumber || "blank"
+    );
     this.userOptions = userData.map(_i => ({
       text: [_i.user, _i.mobile.replace(/[^\d]/g, "")]
         .filter(Boolean)
@@ -147,6 +169,7 @@ export default {
     ...mapState({
       rowsPerPage: state => state.order.rowsPerPage,
       filterSite: state => state.order.filterSite,
+      filterOrderNumber: state => state.order.filterOrderNumber,
       filterStatus: state => state.order.filterStatus,
       filterCountry: state => state.order.filterCountry,
       filterUser: state => state.order.filterUser,
@@ -182,9 +205,18 @@ export default {
   },
   methods: {
     setFilterFromRoute() {
-      const { rows, site, status, country, user, partner } = this.$route.query;
+      const {
+        rows,
+        site,
+        number,
+        status,
+        country,
+        user,
+        partner
+      } = this.$route.query;
       if (rows) this.changeRowsPerPage(Number(rows));
       if (site) this.changeFilterSite(site);
+      if (site) this.changeFilterOrderNumber(number);
       if (status) this.changeFilterStatus(Number(status));
       if (country) this.changeFilterCountry(Number(country));
       if (user) this.changeFilterUser(Number(user));
@@ -193,6 +225,7 @@ export default {
     ...mapActions("order", [
       "changeRowsPerPage",
       "changeFilterSite",
+      "changeFilterOrderNumber",
       "changeFilterUser",
       "changeFilterPartner",
       "changeFilterStatus",

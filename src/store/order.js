@@ -6,6 +6,7 @@ const initState = () => ({
   orders: [],
   filterStatus: -1,
   filterSite: "",
+  filterOrderNumber: "",
   filterUser: -1,
   filterPartner: -1,
   filterCountry: -1,
@@ -26,9 +27,18 @@ export default {
 
   getters: {
     conditionPayload: state => {
-      const { filterSite, filterStatus, filterUser, filterPartner, filterCountry } = state;
+      const {
+        filterSite,
+        filterOrderNumber,
+        filterStatus,
+        filterUser,
+        filterPartner,
+        filterCountry
+      } = state;
       const payload = {};
       if (filterSite.length) payload[`orders.Site`] = filterSite;
+      if (filterOrderNumber.length)
+        payload[`orders.OrderNumber`] = filterOrderNumber;
       if (filterStatus != -1) payload[`orders.Status`] = filterStatus;
       if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
       if (filterPartner != -1) payload[`orders.Method`] = filterPartner;
@@ -42,12 +52,21 @@ export default {
 
   actions: {
     async fetchOrders({ state }) {
-      const { filterSite, filterStatus, filterUser, filterPartner, filterCountry } = state;
+      const {
+        filterSite,
+        filterOrderNumber,
+        filterStatus,
+        filterUser,
+        filterPartner,
+        filterCountry
+      } = state;
       const payload = {
         page: state.page,
         rowsPerPage: state.rowsPerPage
       };
       if (filterSite.length) payload[`orders.Site`] = filterSite;
+      if (filterOrderNumber.length)
+        payload[`orders.OrderNumber`] = filterOrderNumber;
       if (filterStatus != -1) payload[`orders.Status`] = filterStatus;
       if (filterCountry != -1) payload[`orders.Country`] = filterCountry;
       if (filterUser != -1) payload[`orders.UserId`] = filterUser;
@@ -101,6 +120,11 @@ export default {
       state.page = 1;
       dispatch("fetchOrders");
     },
+    changeFilterOrderNumber({ state, dispatch }, value) {
+      state.filterOrderNumber = value || "";
+      state.page = 1;
+      dispatch("fetchOrders");
+    },
     changeFilterUser({ state, dispatch }, value) {
       state.filterUser = value || -1;
       state.page = 1;
@@ -138,7 +162,7 @@ export default {
       state.multiSelected = value;
     },
     reset({ state }) {
-      Object.assign(state, initState())
+      Object.assign(state, initState());
     }
   },
   namespaced: true

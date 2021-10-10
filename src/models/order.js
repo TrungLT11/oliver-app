@@ -115,7 +115,7 @@ class Order {
   }
 
   get orderTime() {
-    return new Date(this.orderDate).toLocaleDateString();
+    return new moment(this.orderDate).format('DD/MM/YYYY');
   }
 
   get hostName() {
