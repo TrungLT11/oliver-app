@@ -12,6 +12,7 @@
             :items="countryOptions"
             label="Nước"
             prepend-inner-icon="mdi-flag"
+            @change="onCountryChange"
           >
             <template slot="item" slot-scope="{ item }">
               <span>
@@ -29,11 +30,25 @@
             prepend-inner-icon="mdi-link"
             :rules="[rules.required]"
           />
-          <v-text-field
-            v-model="draft.imgLink"
-            label="Link Ảnh"
-            prepend-inner-icon="mdi-image"
-          />
+          <v-row class="ma-0 pa-0" justify="space-between" align="center">
+            <v-text-field
+              v-model="draft.imgLink"
+              label="Link Ảnh"
+              prepend-inner-icon="mdi-image"
+            />
+
+            <v-btn
+              v-tooltip="'Upload Ảnh'"
+              small
+              outlined
+              tile
+              color="primary"
+              @click="openUploadModal"
+              @dblclick.prevent=""
+            >
+              Upload
+            </v-btn>
+          </v-row>
           <v-row class="ma-0 pa-0" justify="space-between">
             <v-text-field
               v-model="draft.color"
@@ -137,9 +152,9 @@
               label="Weight"
               prepend-inner-icon="mdi-weight-kilogram"
             />
-            <v-btn v-tooltip="'Phí Ship'" small outlined tile color="primary"
-              >{{ draft.weight * draft.weightRate }} $</v-btn
-            >
+            <v-btn v-tooltip="'Phí Ship'" small outlined tile color="primary">
+              {{ draft.weight * draft.weightRate }} $
+            </v-btn>
           </v-row>
 
           <v-row class="ma-0 pa-0" justify="space-between">
@@ -319,9 +334,9 @@
           <v-btn type="submit" depressed color="success" class="mr-2">
             CHẤP NHẬN
           </v-btn>
-          <v-btn color="blue" depressed class="mr-2" @click="compute">
+          <!-- <v-btn color="blue" depressed class="mr-2" @click="compute">
             TẠM TÍNH
-          </v-btn>
+          </v-btn> -->
           <v-btn color="grey" text class="mr-0" @click="cancel">
             HỦY BỎ
           </v-btn>
@@ -333,8 +348,7 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import moment from "moment";
-import { round } from "lodash";
+import { round, debounce } from "lodash";
 import extractDomain from "extract-domain";
 import computedOrder from "@/models/computedOrder";
 import rules from "@/utils/formRules";
@@ -370,8 +384,10 @@ export default {
       { text: "USA", value: 1, color: "green" },
       { text: "UK", value: 2, color: "blue" },
       { text: "SPAIN", value: 3, color: "orange" },
-      { text: "KOREA", value: 4, color: "red" }
-    ]
+      { text: "KOREA", value: 4, color: "red" },
+      { text: "POLAND", value: 5, color: "purple" }
+    ],
+    uploadWidget: {}
   }),
   computed: {
     exchangeValue() {
@@ -409,9 +425,29 @@ export default {
     ];
     const exchangeData = await this.fetchExchange();
     this.exchangeRates = exchangeData;
+    this.uploadWidget = window.cloudinary.createUploadWidget(
+      {
+        cloud_name: "dgctdson7",
+        upload_preset: "nc3oqwf8",
+        sources: ["local", "url", "facebook", "instagram"],
+        singleUploadAutoClose: true,
+        multiple: false,
+        folder: "oliver"
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          this.draft.imgLink = result.info.url;
+        }
+      }
+    );
   },
 
   methods: {
+    openUploadModal() {
+      if (this.uploadWidget.open) this.uploadWidget.open();
+      else alert("Upload widget is not loaded");
+    },
+
     submit() {
       if (!this.$refs.form.validate()) return false;
       const payload = this.compute();
@@ -432,6 +468,16 @@ export default {
     },
     cancel() {
       this.$emit("cancel");
+    },
+    onCountryChange(val) {
+      // UK
+      if (val === 2) this.draft.weightRate = 9.0;
+      // SPAIN
+      else if (val === 3) this.draft.weightRate = 10.0;
+      else if (val === 5) this.draft.weightRate = 45.0;
+      else this.draft.weightRate = 11.0;
+      if (val === 1) this.draft.tax = 10;
+      else this.draft.tax = 0;
     },
     ...mapActions("order", ["fetchOrderCol", "setEditDialog"]),
     ...mapActions("exchange", ["fetchExchange"])
@@ -462,15 +508,16 @@ export default {
         if (val === "1") this.commission = 5;
         else this.commission = 50000;
     },
-    "draft.country": function(val) {
-      // UK
-      if (val === 2) this.draft.weightRate = 9.0;
-      // SPAIN
-      else if (val === 3) this.draft.weightRate = 10.0;
-      else this.draft.weightRate = 11.0;
-      if (val === 1) this.draft.tax = 10;
-      else this.draft.tax = 0;
-    },
+    // "draft.country": function(val) {
+    //   // UK
+    //   if (val === 2) this.draft.weightRate = 9.0;
+    //   // SPAIN
+    //   else if (val === 3) this.draft.weightRate = 10.0;
+    //   else if (val === 5) this.draft.weightRate = 45.0;
+    //   else this.draft.weightRate = 11.0;
+    //   if (val === 1) this.draft.tax = 10;
+    //   else this.draft.tax = 0;
+    // },
     "draft.link": function(val) {
       this.draft.site = extractDomain(val) || val;
     },

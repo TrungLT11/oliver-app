@@ -176,7 +176,8 @@ export default {
       { text: "USA", value: 1, color: "green" },
       { text: "UK", value: 2, color: "blue" },
       { text: "SPAIN", value: 3, color: "orange" },
-      { text: "KOREA", value: 4, color: "red" }
+      { text: "KOREA", value: 4, color: "red" },
+      { text: "POLAND", value: 5, color: "purple" }
     ]
   }),
   computed: {

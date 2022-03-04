@@ -16,6 +16,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "chartist-plugin-tooltips": "^0.0.17",
+    "cloudinary-core": "^2.12.3",
+    "cloudinary-vue": "^1.2.3",
     "core-js": "^3.6.2",
     "extract-domain": "^2.3.3",
     "lodash": "^4.17.21",

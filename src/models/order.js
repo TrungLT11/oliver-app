@@ -91,6 +91,9 @@ class Order {
       case 4:
         result = "KOREA";
         break;
+      case 5:
+        result = "POLAND";
+        break;
     }
     return result;
   }
@@ -109,13 +112,15 @@ class Order {
         break;
       case 4:
         result = "red";
+      case 5:
+        result = "purple";
         break;
     }
     return result;
   }
 
   get orderTime() {
-    return new moment(this.orderDate).format('DD/MM/YYYY');
+    return new moment(this.orderDate).format("DD/MM/YYYY");
   }
 
   get hostName() {

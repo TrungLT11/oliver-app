@@ -20,6 +20,7 @@ import "./plugins/chartist";
 import "./plugins/vee-validate";
 import "./plugins/tooltip.js";
 import "./plugins/tooltip.css";
+import "./plugins/cloudinary";
 import vuetify from "./plugins/vuetify";
 import i18n from "./i18n";
 import VueSilentbox from "vue-silentbox";

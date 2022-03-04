@@ -12,9 +12,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    barColor: "rgba(0, 0, 0, .8), rgba(0, 0, 0, .8)",
+    barColor: "rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)",
     barImage:
-      "https://demos.creative-tim.com/material-dashboard/assets/img/sidebar-1.jpg",
+      "https://images.wallpapersden.com/image/download/macos-catalina-mountains_a2tsbWyUmZqaraWkpJRmbmdlrWZlbWU.jpg",
     drawer: null
   },
   mutations: {

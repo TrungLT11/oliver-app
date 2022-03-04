@@ -32,8 +32,8 @@
             <v-list-item-title class="text-truncate body-1">
               {{ order.site }} ({{ order.quantity }})
             </v-list-item-title>
-            <v-list-item-subtitle>
-              {{ order.color }} ({{ order.size }})
+            <v-list-item-subtitle class="text-truncate body-1">
+              {{ order.color }} {{ order.size }}
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
@@ -50,7 +50,7 @@
           </v-list-item-action>
           <v-list-item-subtitle>{{ order.arrivalDate }}</v-list-item-subtitle>
         </v-list-item>
-        <v-list-item v-if="order.note&&order.note!='None'">
+        <v-list-item v-if="order.note && order.note != 'None'">
           <v-list-item-action>
             <v-icon>mdi-note</v-icon>
           </v-list-item-action>
