@@ -94,6 +94,9 @@ class Order {
       case 5:
         result = "POLAND";
         break;
+      case 6:
+        result = "CHINA";
+        break;
     }
     return result;
   }
@@ -114,6 +117,9 @@ class Order {
         result = "red";
       case 5:
         result = "purple";
+        break;
+      case 6:
+        result = "yellow";
         break;
     }
     return result;

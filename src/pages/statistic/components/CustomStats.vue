@@ -194,7 +194,8 @@ export default {
 
         {
           text: "Tổng chi phí",
-          value: "ROUND(Sum((ShippingCharge+Surcharge)*Rate/1000000),3) as value"
+          value:
+            "ROUND(Sum((ShippingCharge+Surcharge)*Rate/1000000),3) as value"
         },
         {
           text: "Tổng công mua",
@@ -295,7 +296,7 @@ export default {
           };
         } else {
           userCondition = {
-            1: 1
+            0: 0
           };
         }
       }

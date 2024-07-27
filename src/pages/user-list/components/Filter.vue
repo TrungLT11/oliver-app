@@ -59,10 +59,10 @@ export default {
   async created() {
     const userData = await this.fetchTransferCol({
       table: "members",
-      colName: "User,id"
+      colName: "User,id,mobile"
     });
     this.userOptions = userData.map(_i => ({
-      text: _i.User,
+      text: _i.User + " - " + _i.mobile,
       value: _i.id
     }));
   },

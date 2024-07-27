@@ -385,7 +385,8 @@ export default {
       { text: "UK", value: 2, color: "blue" },
       { text: "SPAIN", value: 3, color: "orange" },
       { text: "KOREA", value: 4, color: "red" },
-      { text: "POLAND", value: 5, color: "purple" }
+      { text: "POLAND", value: 5, color: "purple" },
+      { text: "CHINA", value: 6, color: "yellow" }
     ],
     uploadWidget: {}
   }),

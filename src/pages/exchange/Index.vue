@@ -126,6 +126,31 @@
           </v-row>
         </base-material-stats-card>
       </v-col>
+      <v-col sm="12" md="4">
+        <base-material-stats-card
+          color="yellow darken-2"
+          icon="mdi-currency-cny"
+          :smallValue="cnRate.toLocaleString() + ' ₫'"
+        >
+          <v-row align="center" class="ma-0 pa-0">
+            <v-text-field
+              v-if="currentUser.admin"
+              v-model="cnRateInput"
+              type="number"
+              label="Sửa"
+            ></v-text-field>
+            <v-btn
+              small
+              outlined
+              tile
+              color="primary"
+              @click.prevent="updateExchange(6, cnRateInput)"
+            >
+              Cập nhật
+            </v-btn>
+          </v-row>
+        </base-material-stats-card>
+      </v-col>
     </v-row>
     <v-overlay :value="fetching" opacity=".75">
       <v-progress-circular
@@ -149,11 +174,13 @@ export default {
       spainRate: 0,
       krRate: 0,
       plRate: 0,
+      cnRate: 0,
       usRateInput: 0,
       ukRateInput: 0,
       spainRateInput: 0,
       krRateInput: 0,
-      plRateInput: 0
+      plRateInput: 0,
+      cnRateInput: 0
     };
   },
   computed: {
@@ -173,11 +200,13 @@ export default {
       this.spainRate = response[2].rate;
       this.krRate = response[3].rate;
       this.plRate = response[4].rate;
+      this.cnRate = response[5].rate;
       this.usRateInput = response[0].rate;
       this.ukRateInput = response[1].rate;
       this.spainRateInput = response[2].rate;
       this.krRateInput = response[3].rate;
       this.plRateInput = response[4].rate;
+      this.cnRateInput = response[5].rate;
     },
     async updateExchange(id, rate) {
       await this.updateExchangeRate({ id, rate });
